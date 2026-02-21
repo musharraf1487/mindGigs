@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --gd: #0a2e1a;
-  --gm: #1a5c35;
-  --gb: #2d9e5f;
-  --gl: #4ecb87;
-  --gp: #d4f5e4;
-  --gmt: #edfbf3;
-  --cr: #faf9f5;
+  --gd: #25343F;
+  --gm: #344654;
+  --gb: #FF9B51;
+  --gl: #ffb27a;
+  --gp: #ffeed9;
+  --gmt: #EAEFEF;
+  --cr: #f6f8f8;
   --wh: #ffffff;
-  --ch: #1a1d1f;
-  --sl: #3d4347;
-  --mu: #8a9199;
+  --ch: #25343F;
+  --sl: #5d6d7a;
+  --mu: #BFC9D1;
   --gold: #e8c547;
   --teal: #1ab8a0;
   --rd: #e84444;
@@ -21,8 +21,8 @@
   --rmd: 16px;
   --rlg: 28px;
   --rxl: 48px;
-  --sg: 0 8px 40px rgba(45, 158, 95, 0.18);
-  --sc: 0 4px 24px rgba(10, 46, 26, 0.08);
+  --sg: 0 8px 40px rgba(255, 155, 81, 0.18);
+  --sc: 0 4px 24px rgba(37, 52, 63, 0.08);
   --fu: 'Sora', sans-serif;
   --fd: 'DM Serif Display', serif;
   --fb: 'DM Sans', sans-serif;

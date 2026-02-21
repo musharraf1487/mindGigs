@@ -18,7 +18,7 @@ export function OnboardingPage({ nav, notify }) {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 60% 40% at 50% 0%,rgba(78,203,135,.1) 0%,transparent 65%)',
+            'radial-gradient(ellipse 60% 40% at 50% 0%,rgba(255,178,122,.1) 0%,transparent 65%)',
           pointerEvents: 'none',
         }}
       />
@@ -80,7 +80,7 @@ export function OnboardingPage({ nav, notify }) {
                   justifyContent: 'center',
                   fontSize: '2rem',
                   margin: '0 auto 24px',
-                  border: '3px dashed rgba(45,158,95,.3)',
+                  border: '3px dashed rgba(255,155,81,.3)',
                   cursor: 'pointer',
                 }}
               >
@@ -191,7 +191,7 @@ export function OnboardingPage({ nav, notify }) {
                   </div>
                   <div
                     style={{
-                      border: '2px dashed rgba(45,158,95,.2)',
+                      border: '2px dashed rgba(255,155,81,.2)',
                       borderRadius: 'var(--rsm)',
                       padding: 24,
                       textAlign: 'center',
@@ -222,7 +222,7 @@ export function OnboardingPage({ nav, notify }) {
                   borderRadius: 'var(--rsm)',
                   padding: 20,
                   marginBottom: 24,
-                  border: '1px solid rgba(45,158,95,.15)',
+                  border: '1px solid rgba(255,155,81,.15)',
                 }}
               >
                 <div

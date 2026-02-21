@@ -18,7 +18,7 @@ function AuthShell({ children, nav }) {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 60% 60% at 50% 0%,rgba(78,203,135,.12) 0%,transparent 70%)',
+            'radial-gradient(ellipse 60% 60% at 50% 0%,rgba(255,178,122,.12) 0%,transparent 70%)',
           pointerEvents: 'none',
         }}
       />

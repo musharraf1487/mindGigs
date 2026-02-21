@@ -18,8 +18,8 @@ export function LandingPage({ nav, onLogin }) {
           justifyContent: 'space-between',
           background: 'rgba(250,249,245,.9)',
           backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(45,158,95,.1)',
-          boxShadow: '0 1px 12px rgba(10,46,26,.06)',
+          borderBottom: '1px solid rgba(255,155,81,.1)',
+          boxShadow: '0 1px 12px rgba(37,52,63,.06)',
         }}
       >
         <div
@@ -91,7 +91,7 @@ export function LandingPage({ nav, onLogin }) {
           <div className="fc-sub">Lifetime Commission</div>
         </div>
         <div className="float-card fc-3">
-          <div className="fc-avatar" style={{ background: 'rgba(26,184,160,.12)' }}>💳</div>
+          <div className="fc-avatar" style={{ background: 'rgba(191,201,209,.12)' }}>💳</div>
           <div>
             <div className="fc-sub">Monthly Recurring</div>
             <div className="fc-val">$3,840 MRR</div>
@@ -353,7 +353,7 @@ export function LandingPage({ nav, onLogin }) {
                         width: 38,
                         height: 38,
                         borderRadius: '50%',
-                        background: 'rgba(26,184,160,.1)',
+                        background: 'rgba(191,201,209,.1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

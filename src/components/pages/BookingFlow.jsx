@@ -77,7 +77,7 @@ export function BookingFlow({ nav, notify }) {
                   width: 28,
                   height: 28,
                   borderRadius: '50%',
-                  background: i <= step ? 'var(--gb)' : 'rgba(45,158,95,.15)',
+                  background: i <= step ? 'var(--gb)' : 'rgba(255,155,81,.15)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -209,7 +209,7 @@ export function BookingFlow({ nav, notify }) {
                 borderRadius: 'var(--rsm)',
                 padding: 20,
                 marginBottom: 24,
-                border: '1px solid rgba(45,158,95,.12)',
+                border: '1px solid rgba(255,155,81,.12)',
               }}
             >
               <div style={{ display: 'flex', gap: 14 }}>
@@ -224,7 +224,7 @@ export function BookingFlow({ nav, notify }) {
                     justifyContent: 'center',
                     fontSize: '1.3rem',
                     flexShrink: 0,
-                    border: '2px solid rgba(45,158,95,.2)',
+                    border: '2px solid rgba(255,155,81,.2)',
                   }}
                 >
                   🧠
@@ -274,7 +274,7 @@ export function BookingFlow({ nav, notify }) {
             </div>
             <div
               style={{
-                borderTop: '1px solid rgba(45,158,95,.08)',
+                borderTop: '1px solid rgba(255,155,81,.08)',
                 paddingTop: 16,
                 marginBottom: 20,
                 display: 'flex',

@@ -7,9 +7,11 @@ import { SignupPage } from './components/pages/SignupPage';
 import { OnboardingPage } from './components/pages/OnboardingPage';
 import { PublicProfile } from './components/pages/PublicProfile';
 import { BookingFlow } from './components/pages/BookingFlow';
+import { ExpertsDirectory } from './components/pages/ExpertsDirectory';
 import { ExpertDashboard } from './components/dashboards/expert/ExpertDashboard';
 import { AdminDashboard } from './components/dashboards/admin/AdminDashboard';
 import { AffiliateDashboard } from './components/dashboards/affiliate/AffiliateDashboard';
+import { ClientDashboard } from './components/dashboards/client/ClientDashboard';
 
 // Import stylesheets
 import './styles/globals.css';
@@ -42,6 +44,13 @@ function LoginSelectorModal({ onClose, onSelect }) {
               icon: '🧠',
               title: 'Expert / Creator',
               sub: 'Access your profile, bookings & earnings',
+              cls: 'lo-expert',
+            },
+            {
+              role: 'client',
+              icon: '🛍️',
+              title: 'Client / Buyer',
+              sub: 'View bookings, subscriptions & purchases',
               cls: 'lo-expert',
             },
             {
@@ -108,7 +117,8 @@ export default function App() {
     setLoginRole(null);
     if (role === 'expert') setPage('expert-dashboard');
     else if (role === 'admin') setPage('admin-dashboard');
-    else setPage('affiliate-dashboard');
+    else if (role === 'affiliate') setPage('affiliate-dashboard');
+    else if (role === 'client') setPage('client-dashboard');
     notify(`Welcome back, ${u.name}!`);
   };
 
@@ -151,6 +161,13 @@ export default function App() {
       )}
       {page === 'signup' && <SignupPage nav={nav} notify={notify} />}
       {page === 'onboarding' && <OnboardingPage nav={nav} notify={notify} />}
+      {page === 'experts' && (
+        <ExpertsDirectory
+          nav={nav}
+          notify={notify}
+          onLogin={() => setShowLoginSelector(true)}
+        />
+      )}
       {page === 'expert-dashboard' && user?.role === 'expert' && (
         <ExpertDashboard user={user} nav={nav} logout={logout} notify={notify} />
       )}
@@ -159,6 +176,9 @@ export default function App() {
       )}
       {page === 'affiliate-dashboard' && user?.role === 'affiliate' && (
         <AffiliateDashboard user={user} nav={nav} logout={logout} notify={notify} />
+      )}
+      {page === 'client-dashboard' && user?.role === 'client' && (
+        <ClientDashboard user={user} nav={nav} logout={logout} notify={notify} />
       )}
       {page === 'public-profile' && <PublicProfile nav={nav} notify={notify} />}
       {page === 'booking' && <BookingFlow nav={nav} notify={notify} />}

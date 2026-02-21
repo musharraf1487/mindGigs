@@ -7,7 +7,7 @@ export function PublicProfile({ nav, notify }) {
       <div
         style={{
           background: '#fff',
-          borderBottom: '1px solid rgba(45,158,95,.1)',
+          borderBottom: '1px solid rgba(255,155,81,.1)',
           padding: '0 48px',
           height: 64,
           display: 'flex',
@@ -232,7 +232,7 @@ export function PublicProfile({ nav, notify }) {
           >
             ♻️ Subscriptions
           </h3>
-          <div className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(45,158,95,.15)' }}>
+          <div className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(255,155,81,.15)' }}>
             <div
               style={{
                 display: 'flex',

@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 
 export function Earnings({ user, affiliateData }) {
-  const [period, setPeriod] = useState('month');
+  const [period, setPeriod] = useState('all');
+
+  const commissions = parseFloat(affiliateData?.totalCommissions?.replace('$', '') || 0);
+  const pending = parseFloat(affiliateData?.pendingPayout || 0);
+  const total = parseFloat(affiliateData?.totalEarnings?.replace('$', '') || 0);
+  const withdrawn = total - pending;
 
   return (
-    <div className="dash-content">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '600' }}>Earnings & Payouts</h2>
-        <select 
-          value={period} 
-          onChange={(e) => setPeriod(e.target.value)}
-          style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: '#fff', cursor: 'pointer' }}
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h2 style={{ fontFamily: 'var(--fu)', fontSize: '1.35rem', fontWeight: 700, color: 'var(--gd)', marginBottom: '4px' }}>
+            Earnings & Payouts
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: 'var(--mu)' }}>Your commission history and payout records</p>
+        </div>
+        <select
+          value={period}
+          onChange={e => setPeriod(e.target.value)}
+          style={{ padding: '9px 14px', border: '1.5px solid rgba(255,155,81,0.15)', borderRadius: '8px', background: '#fff', fontSize: '0.875rem', cursor: 'pointer', color: 'var(--ch)' }}
         >
           <option value="week">This Week</option>
           <option value="month">This Month</option>
@@ -19,59 +30,93 @@ export function Earnings({ user, affiliateData }) {
         </select>
       </div>
 
-      <div className="grid-3" style={{ gap: '20px', marginBottom: '30px' }}>
-        <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#1aa34a', marginBottom: '8px' }}>
-            {affiliateData?.totalCommissions || '$0'}
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
+        {[
+          { label: 'Total Commissions', val: `$${commissions.toLocaleString()}`, ch: 'All commissions earned', color: 'var(--gl)', icon: '💰' },
+          { label: 'Pending Payout', val: `$${pending}`, ch: 'Ready to withdraw', color: 'var(--gold)', icon: '⏳' },
+          { label: 'Total Withdrawn', val: `$${withdrawn.toLocaleString()}`, ch: 'Successfully paid out', color: 'var(--teal)', icon: '✅' },
+        ].map((s, i) => (
+          <div key={i} className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+              <div className="stat-label">{s.label}</div>
+              <span>{s.icon}</span>
+            </div>
+            <div className="stat-val" style={{ color: s.color }}>{s.val}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: s.color, marginTop: '6px' }}>{s.ch}</div>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: s.color, opacity: 0.3 }} />
           </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Total Commissions</div>
-        </div>
-        <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#0066ff', marginBottom: '8px' }}>
-            {affiliateData?.pendingPayout || '$0'}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Pending Payout</div>
-        </div>
-        <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#f39c12', marginBottom: '8px' }}>
-            {affiliateData?.totalEarnings || '$0'}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Total Withdrawn</div>
-        </div>
+        ))}
       </div>
 
-      <div className="card" style={{ marginBottom: '20px' }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600' }}>Payout History</h3>
+      {/* Pending Payout Banner */}
+      {pending > 0 && (
+        <div style={{
+          marginBottom: '24px', padding: '16px 20px',
+          background: 'linear-gradient(135deg, rgba(255,178,122,0.08), rgba(191,201,209,0.06))',
+          borderRadius: '12px', border: '1.5px solid rgba(255,178,122,0.15)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div>
+            <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--gd)', marginBottom: '4px' }}>
+              💸 ${pending} ready for withdrawal
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--mu)' }}>Payouts process every 2 weeks on Fridays. Min. $50.</div>
+          </div>
+          <button style={{
+            padding: '10px 20px', background: 'var(--gb)', color: '#fff',
+            borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer',
+          }}>
+            Request Payout
+          </button>
         </div>
-        <div style={{ padding: '20px' }}>
-          {affiliateData?.payouts?.length > 0 ? (
-            <div>
-              {affiliateData.payouts.map((payout, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '16px', borderBottom: i < affiliateData.payouts.length - 1 ? '1px solid #eee' : 'none' }}>
-                  <div>
-                    <div style={{ fontWeight: '600', marginBottom: '4px' }}>{payout.date}</div>
-                    <div style={{ fontSize: '12px', color: '#999' }}>{payout.method}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#1aa34a' }}>+{payout.amount}</div>
-                    <div style={{ fontSize: '12px', color: '#1aa34a', fontWeight: '500' }}>{payout.status}</div>
-                  </div>
-                </div>
+      )}
+
+      {/* Payout History */}
+      <div className="table-wrap">
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,155,81,0.07)' }}>
+          <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--gd)' }}>Payout History</div>
+        </div>
+        {affiliateData?.payouts?.length > 0 ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {affiliateData.payouts.map((p, i) => (
+                <tr key={i}>
+                  <td style={{ fontWeight: 500 }}>{p.date}</td>
+                  <td style={{ fontWeight: 700, color: 'var(--gl)' }}>+{p.amount}</td>
+                  <td>
+                    <span style={{ padding: '3px 10px', borderRadius: '100px', fontSize: '0.72rem', fontWeight: 600, background: 'rgba(255,155,81,0.06)', color: 'var(--gm)' }}>
+                      {p.method}
+                    </span>
+                  </td>
+                  <td>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '4px',
+                      padding: '3px 10px', borderRadius: '100px', fontSize: '0.72rem', fontWeight: 600,
+                      background: 'rgba(255,178,122,0.1)', color: 'var(--gl)',
+                    }}>
+                      ✓ {p.status}
+                    </span>
+                  </td>
+                </tr>
               ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', color: '#999', padding: '20px' }}>
-              No payouts yet
-            </div>
-          )}
-        </div>
-      </div>
-
-      <button className="btn btn-pr">Request Payout</button>
-
-      <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f0fdf4', borderRadius: '6px', border: '1px solid #dcfce7', fontSize: '13px', color: '#166534' }}>
-        <strong>✓ Minimum payout:</strong> $50. Payouts are processed every 2 weeks on Fridays.
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--mu)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>💰</div>
+            <div style={{ fontFamily: 'var(--fu)', fontWeight: 600 }}>No payouts yet</div>
+            <div style={{ fontSize: '0.82rem', marginTop: '4px' }}>Reach the $50 minimum to request your first payout</div>
+          </div>
+        )}
       </div>
     </div>
   );

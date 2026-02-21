@@ -1,91 +1,117 @@
 import React from 'react';
 
 export function Overview({ user, affiliateData, notify }) {
+  const stats = [
+    { label: 'Total Earnings', val: affiliateData?.totalEarnings || '$0', ch: 'All-time commission', color: 'var(--gl)', icon: '💰' },
+    { label: 'Active Referrals', val: affiliateData?.referrals?.length || 0, ch: 'Approved experts', color: 'var(--teal)', icon: '👥' },
+    { label: 'Active Campaigns', val: affiliateData?.campaigns?.length || 0, ch: 'Marketing efforts', color: 'var(--gold)', icon: '📢' },
+    { label: 'Pending Payout', val: `$${affiliateData?.pendingPayout || '0'}`, ch: 'Ready to withdraw', color: 'var(--purp)', icon: '⏳' },
+  ];
+
+  const username = user?.username || user?.name?.split(' ')[0]?.toLowerCase() || 'zaid';
+
   return (
-    <div className="dash-content">
-      <div style={{ marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '20px' }}>Affiliate Overview</h2>
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h2 style={{ fontFamily: 'var(--fu)', fontSize: '1.35rem', fontWeight: 700, color: 'var(--gd)', marginBottom: '4px' }}>
+          Welcome back, {user?.name?.split(' ')[0]} 👋
+        </h2>
+        <p style={{ fontSize: '0.875rem', color: 'var(--mu)' }}>Here's your affiliate performance at a glance</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid-2" style={{ marginBottom: '40px', gap: '20px' }}>
-        <div className="stat-card">
-          <div style={{ fontSize: '32px', fontWeight: '700', color: '#1aa34a', marginBottom: '8px' }}>
-            {affiliateData?.totalEarnings || '$0'}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+        {stats.map((s, i) => (
+          <div key={i} className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+              <div className="stat-label">{s.label}</div>
+              <span style={{ fontSize: '1.2rem' }}>{s.icon}</span>
+            </div>
+            <div className="stat-val" style={{ color: s.color }}>{s.val}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: s.color, marginTop: '6px' }}>{s.ch}</div>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: s.color, opacity: 0.3 }} />
           </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Total Earnings</div>
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>All-time commission</div>
-        </div>
-
-        <div className="stat-card">
-          <div style={{ fontSize: '32px', fontWeight: '700', color: '#0066ff', marginBottom: '8px' }}>
-            {affiliateData?.referrals?.length || 0}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Active Referrals</div>
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Approved experts</div>
-        </div>
-
-        <div className="stat-card">
-          <div style={{ fontSize: '32px', fontWeight: '700', color: '#f39c12', marginBottom: '8px' }}>
-            {affiliateData?.campaigns?.length || 0}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Active Campaigns</div>
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Marketing efforts</div>
-        </div>
-
-        <div className="stat-card">
-          <div style={{ fontSize: '32px', fontWeight: '700', color: '#e74c3c', marginBottom: '8px' }}>
-            ${affiliateData?.pendingPayout || '0'}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Pending Payout</div>
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>Ready to withdraw</div>
-        </div>
+        ))}
       </div>
 
       {/* Affiliate Link */}
-      <div className="card" style={{ marginBottom: '30px', padding: '20px', backgroundColor: '#f0fdf4', border: '1px solid #dcfce7' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Your Affiliate Link</div>
-            <div style={{ fontSize: '12px', color: '#666', fontFamily: 'monospace', backgroundColor: '#fff', padding: '8px 12px', borderRadius: '4px', marginTop: '8px', wordBreak: 'break-all' }}>
-              https://mindgigs.com/ref/{user?.username || 'zaid'}
-            </div>
+      <div style={{
+        marginBottom: '24px', padding: '18px 20px',
+        background: 'linear-gradient(135deg, rgba(191,201,209,0.08), rgba(191,201,209,0.03))',
+        borderRadius: '12px', border: '1.5px solid rgba(191,201,209,0.15)',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px',
+      }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.85rem', color: 'var(--gd)', marginBottom: '8px' }}>
+            🔗 Your Affiliate Link
           </div>
-          <button 
-            onClick={() => {
-              navigator.clipboard.writeText(`https://mindgigs.com/ref/${user?.username || 'zaid'}`);
-              notify?.('Affiliate link copied!', 'success');
-            }}
-            className="btn btn-sm" 
-            style={{ fontSize: '13px' }}
-          >
-            Copy Link
-          </button>
+          <div className="ref-box" style={{ marginTop: 0 }}>
+            <span className="ref-url">https://mindgigs.com/ref/{username}</span>
+          </div>
         </div>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(`https://mindgigs.com/ref/${username}`);
+            notify?.('Affiliate link copied!', 'success');
+          }}
+          style={{
+            padding: '10px 18px', background: 'var(--teal)', color: '#fff',
+            borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600,
+            fontSize: '0.82rem', cursor: 'pointer', flexShrink: 0,
+          }}
+        >Copy Link</button>
       </div>
 
-      {/* Recent Activity */}
-      <div className="card">
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600' }}>Recent Activity</h3>
-        </div>
-        <div style={{ padding: '20px' }}>
-          {affiliateData?.activities?.length > 0 ? (
-            affiliateData.activities.slice(0, 5).map((activity, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '16px', paddingBottom: '16px', borderBottom: i < 4 ? '1px solid #eee' : 'none' }}>
-                <div style={{ fontSize: '18px', marginRight: '12px' }}>{activity.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '500', marginBottom: '4px' }}>{activity.text}</div>
-                  <div style={{ fontSize: '12px', color: '#999' }}>{activity.time}</div>
-                </div>
-                {activity.val && <div style={{ fontSize: '14px', fontWeight: '600', color: '#1aa34a' }}>{activity.val}</div>}
-              </div>
-            ))
-          ) : (
-            <div style={{ textAlign: 'center', color: '#999', padding: '20px' }}>
-              No activity yet
+      {/* Two-column: Commissions + Activity */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+
+        {/* Commission Breakdown */}
+        <div className="stat-card">
+          <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--gd)', marginBottom: '16px' }}>
+            Commission Breakdown
+          </div>
+          {[
+            { label: 'Total Commissions', val: affiliateData?.totalCommissions, color: 'var(--gl)' },
+            { label: 'Total Earnings', val: affiliateData?.totalEarnings, color: 'var(--teal)' },
+            { label: 'Pending Payout', val: `$${affiliateData?.pendingPayout}`, color: 'var(--gold)' },
+          ].map((item, i) => (
+            <div key={i} style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '10px 14px', marginBottom: '8px',
+              background: 'var(--gmt)', borderRadius: '8px',
+              border: '1px solid rgba(255,155,81,0.07)',
+            }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--mu)' }}>{item.label}</span>
+              <span style={{ fontFamily: 'var(--fu)', fontWeight: 800, color: item.color }}>{item.val}</span>
             </div>
-          )}
+          ))}
+          <button
+            onClick={() => notify?.('Payout requested!', 'success')}
+            style={{
+              marginTop: '12px', width: '100%', padding: '10px',
+              background: 'linear-gradient(135deg, var(--teal), #18a090)',
+              color: '#fff', borderRadius: '8px',
+              fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer',
+            }}
+          >Request Payout 💸</button>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="stat-card">
+          <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--gd)', marginBottom: '16px' }}>
+            Recent Activity
+          </div>
+          {affiliateData?.activities?.slice(0, 4).map((a, i) => (
+            <div key={i} className="activity-item">
+              <div className="activity-icon" style={{ background: 'var(--gmt)', fontSize: '0.9rem' }}>{a.icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--ch)', marginBottom: '2px' }}>{a.text}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--mu)' }}>{a.time}</div>
+              </div>
+              {a.val && <div style={{ fontFamily: 'var(--fu)', fontWeight: 700, fontSize: '0.82rem', color: 'var(--gl)', flexShrink: 0 }}>{a.val}</div>}
+            </div>
+          ))}
         </div>
       </div>
     </div>

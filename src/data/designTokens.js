@@ -1,21 +1,21 @@
 /* Design Tokens */
 export const colors = {
   // Green palette
-  greenDark: '#0a2e1a',
-  greenMid: '#1a5c35',
-  greenBase: '#2d9e5f',
-  greenLight: '#4ecb87',
-  greenPale: '#d4f5e4',
-  greenMintLight: '#edfbf3',
+  greenDark: '#25343F',
+  greenMid: '#344654',
+  greenBase: '#FF9B51',
+  greenLight: '#ffb27a',
+  greenPale: '#ffeed9',
+  greenMintLight: '#EAEFEF',
 
   // Primary
-  cream: '#faf9f5',
+  cream: '#f6f8f8',
   white: '#ffffff',
 
   // Text
-  charcoal: '#1a1d1f',
-  slate: '#3d4347',
-  mutedGray: '#8a9199',
+  charcoal: '#25343F',
+  slate: '#5d6d7a',
+  mutedGray: '#BFC9D1',
 
   // Accent
   gold: '#e8c547',
@@ -44,8 +44,8 @@ export const borderRadius = {
 };
 
 export const shadows = {
-  subtle: '0 4px 24px rgba(10,46,26,.08)',
-  medium: '0 8px 40px rgba(45,158,95,.18)',
+  subtle: '0 4px 24px rgba(37,52,63,.08)',
+  medium: '0 8px 40px rgba(255,155,81,.18)',
   large: '0 32px 80px rgba(0,0,0,.2)',
 };
 

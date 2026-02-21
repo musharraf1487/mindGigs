@@ -2,104 +2,127 @@ import React, { useState } from 'react';
 
 export function Transactions({ user, adminData }) {
   const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
-  const filteredTransactions = adminData?.recentTransactions?.filter(txn => 
-    statusFilter === 'all' || txn.status === statusFilter
-  ) || [];
+  const txns = adminData?.recentTransactions || [];
+  const filtered = txns.filter(t =>
+    (statusFilter === 'all' || t.status === statusFilter) &&
+    (typeFilter === 'all' || t.type === typeFilter)
+  );
+
+  const totalVolume = txns.reduce((s, t) => s + parseFloat(t.amount.replace('$', '')), 0);
+  const completedCnt = txns.filter(t => t.status === 'completed').length;
+  const pendingCnt = txns.filter(t => t.status === 'pending').length;
+  const types = [...new Set(txns.map(t => t.type))];
+
+  const statusColor = { completed: 'var(--gl)', pending: 'var(--gold)' };
+  const statusBg = { completed: 'rgba(255,178,122,0.1)', pending: 'rgba(232,197,71,0.1)' };
 
   return (
-    <div className="dash-content">
-      <div style={{ marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '8px' }}>Transactions</h2>
-        <div style={{ fontSize: '14px', color: '#666' }}>Monitor all platform transactions</div>
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h2 style={{ fontFamily: 'var(--fu)', fontSize: '1.35rem', fontWeight: 700, color: 'var(--gd)', marginBottom: '4px' }}>
+          Transactions
+        </h2>
+        <p style={{ fontSize: '0.875rem', color: 'var(--mu)' }}>Monitor all platform financial activity</p>
       </div>
 
-      <div className="grid-3" style={{ gap: '20px', marginBottom: '30px' }}>
+      {/* Stats Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
         <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#1aa34a', marginBottom: '8px' }}>
-            ${adminData?.recentTransactions?.reduce((sum, t) => sum + parseFloat(t.amount), 0).toFixed(0) || '0'}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Total Volume</div>
+          <div className="stat-label">Total Volume</div>
+          <div className="stat-val" style={{ color: 'var(--gl)' }}>${totalVolume.toLocaleString()}</div>
+          <div className="stat-change stat-change-gr">All transactions</div>
         </div>
         <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#0066ff', marginBottom: '8px' }}>
-            {adminData?.recentTransactions?.filter(t => t.status === 'completed').length || 0}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Completed</div>
+          <div className="stat-label">Completed</div>
+          <div className="stat-val" style={{ color: 'var(--teal)' }}>{completedCnt}</div>
+          <div className="stat-change stat-change-tl">Successfully processed</div>
         </div>
         <div className="stat-card">
-          <div style={{ fontSize: '28px', fontWeight: '700', color: '#f39c12', marginBottom: '8px' }}>
-            {adminData?.recentTransactions?.filter(t => t.status === 'pending').length || 0}
-          </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Pending</div>
+          <div className="stat-label">Pending</div>
+          <div className="stat-val" style={{ color: 'var(--gold)' }}>{pendingCnt}</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--gold)', fontWeight: 600, marginTop: '6px' }}>Awaiting confirmation</div>
         </div>
       </div>
 
-      {/* Filter */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        {['all', 'completed', 'pending'].map(status => (
-          <button
-            key={status}
-            onClick={() => setStatusFilter(status)}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: statusFilter === status ? '#0066ff' : '#f0f0f0',
-              color: statusFilter === status ? '#fff' : '#333',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              textTransform: 'capitalize'
-            }}
-          >
-            {status === 'all' ? 'All Transactions' : status.charAt(0).toUpperCase() + status.slice(1)}
-          </button>
-        ))}
+      {/* Filter Bar */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <select
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+          style={{ padding: '9px 14px', border: '1.5px solid rgba(255,155,81,0.15)', borderRadius: '8px', background: '#fff', fontSize: '0.875rem', cursor: 'pointer', color: 'var(--ch)' }}
+        >
+          <option value="all">All Status</option>
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+        </select>
+        <select
+          value={typeFilter}
+          onChange={e => setTypeFilter(e.target.value)}
+          style={{ padding: '9px 14px', border: '1.5px solid rgba(255,155,81,0.15)', borderRadius: '8px', background: '#fff', fontSize: '0.875rem', cursor: 'pointer', color: 'var(--ch)' }}
+        >
+          <option value="all">All Types</option>
+          {types.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
+        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center', padding: '9px 14px', background: 'rgba(255,178,122,0.08)', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 600, color: 'var(--gm)' }}>
+          {filtered.length} transaction{filtered.length !== 1 ? 's' : ''} shown
+        </div>
       </div>
 
-      {/* Transactions Table */}
-      <div className="card">
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600' }}>Transaction History</h3>
-        </div>
-        <div style={{ padding: '20px' }}>
-          {filteredTransactions.length > 0 ? (
-            <div>
-              {filteredTransactions.map((txn, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '20px', borderBottom: i < filteredTransactions.length - 1 ? '1px solid #eee' : 'none' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: '600', marginBottom: '4px' }}>{txn.user}</div>
-                    <div style={{ fontSize: '12px', color: '#999' }}>
-                      {txn.id} • {txn.type} • {txn.date}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right', marginRight: '20px' }}>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#1aa34a' }}>+{txn.amount}</div>
-                  </div>
-                  <div>
-                    <span style={{ 
-                      display: 'inline-block', 
-                      padding: '6px 12px', 
-                      borderRadius: '4px', 
-                      fontSize: '12px', 
-                      fontWeight: '500',
-                      backgroundColor: txn.status === 'completed' ? '#d4f5e4' : '#fef3c7',
-                      color: txn.status === 'completed' ? '#1aa34a' : '#92400e'
-                    }}>
-                      {txn.status === 'completed' ? '✓ Completed' : '⏳ Pending'}
+      {/* Table */}
+      <div className="table-wrap">
+        {filtered.length > 0 ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>User</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((txn, i) => (
+                <tr key={i}>
+                  <td>
+                    <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--mu)', background: 'var(--gmt)', padding: '2px 8px', borderRadius: '4px' }}>
+                      {txn.id}
                     </span>
-                  </div>
-                </div>
+                  </td>
+                  <td style={{ fontWeight: 600 }}>{txn.user}</td>
+                  <td>
+                    <span style={{ padding: '3px 10px', borderRadius: '100px', fontSize: '0.72rem', fontWeight: 600, background: 'rgba(255,155,81,0.06)', color: 'var(--gm)' }}>
+                      {txn.type}
+                    </span>
+                  </td>
+                  <td style={{ color: 'var(--mu)' }}>{txn.date}</td>
+                  <td style={{ fontWeight: 700, color: 'var(--gl)' }}>+{txn.amount}</td>
+                  <td>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '4px',
+                      padding: '3px 10px', borderRadius: '100px', fontSize: '0.72rem', fontWeight: 600,
+                      background: statusBg[txn.status] || 'rgba(138,145,153,0.1)',
+                      color: statusColor[txn.status] || 'var(--mu)',
+                    }}>
+                      {txn.status === 'completed' ? '✓' : '⏳'} {txn.status}
+                    </span>
+                  </td>
+                </tr>
               ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', color: '#999', padding: '40px 20px' }}>
-              <div style={{ fontSize: '32px', marginBottom: '12px' }}>💳</div>
-              No transactions found
-            </div>
-          )}
-        </div>
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--mu)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>💳</div>
+            <div style={{ fontFamily: 'var(--fu)', fontWeight: 600 }}>No transactions found</div>
+            <div style={{ fontSize: '0.82rem', marginTop: '4px' }}>Try adjusting filters</div>
+          </div>
+        )}
       </div>
     </div>
   );

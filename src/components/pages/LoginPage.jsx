@@ -60,8 +60,14 @@ export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
       icon: '🔗',
       badge: 'role-aff',
     },
+    client: {
+      label: 'Client / Buyer Portal',
+      color: 'var(--gl)',
+      icon: '🛍️',
+      badge: 'role-client',
+    },
   };
-  const rc = role ? roleConfig[role] : roleConfig.expert;
+  const rc = roleConfig[role] || roleConfig.expert;
 
   const handleLogin = () => {
     const u = Object.values(mockUsers).find((u) => u.email === email && u.pass === pass);
@@ -127,6 +133,55 @@ export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
       <p style={{ fontSize: '.875rem', color: 'var(--sl)', marginBottom: 24 }}>
         Sign in to your account to continue.
       </p>
+
+      {role === 'client' && (
+        <>
+          <button
+            className="btn"
+            style={{
+              width: '100%',
+              background: '#fff',
+              color: 'var(--gd)',
+              border: '1px solid rgba(37,52,63,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+              padding: '12px',
+              borderRadius: '8px',
+              fontWeight: 600,
+              marginBottom: 16,
+              boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+              transition: 'all 0.2s ease',
+              cursor: 'pointer',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = '#f9fafb';
+              e.currentTarget.style.borderColor = 'rgba(37,52,63,0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = '#fff';
+              e.currentTarget.style.borderColor = 'rgba(37,52,63,0.15)';
+            }}
+            onClick={() => {
+              notify('Google Login mocked for demo!', 'success');
+              login('client');
+            }}
+          >
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: 20, height: 20 }} />
+            Sign in with Google
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0' }}>
+            <div style={{ height: 1, flex: 1, background: 'rgba(37,52,63,0.1)' }} />
+            <span style={{ fontSize: '.75rem', color: 'var(--sl)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Or continue with email
+            </span>
+            <div style={{ height: 1, flex: 1, background: 'rgba(37,52,63,0.1)' }} />
+          </div>
+        </>
+      )}
+
       <div className="field">
         <label className="label">Email Address</label>
         <input
@@ -181,8 +236,7 @@ export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
           color: 'var(--gm)',
         }}
       >
-        <strong>Demo:</strong> expert@mindgigs.com · admin@mindgigs.com · aff@mindgigs.com | pass:
-        demo
+        <strong>Demo:</strong> expert@mindgigs.com · client@mindgigs.com · admin@mindgigs.com | pass: demo
       </div>
     </AuthShell>
   );

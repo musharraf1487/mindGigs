@@ -1,6 +1,7 @@
 import React from 'react';
 
-export function PublicProfile({ nav, notify }) {
+export function PublicProfile({ nav, notify, expert }) {
+  if (!expert) return null;
   return (
     <div style={{ background: 'var(--cr)', minHeight: '100vh' }}>
       {/* Nav */}
@@ -64,7 +65,15 @@ export function PublicProfile({ nav, notify }) {
                 boxShadow: '0 4px 16px rgba(0,0,0,.12)',
               }}
             >
-              🧠
+              {expert.image ? (
+                <img
+                  src={expert.image}
+                  alt={expert.name}
+                  style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                expert.avatar || '🧠'
+              )}
             </div>
           </div>
           <div style={{ padding: '44px 32px 28px' }}>
@@ -86,7 +95,7 @@ export function PublicProfile({ nav, notify }) {
                     color: 'var(--gd)',
                   }}
                 >
-                  Priya Sharma
+                  {expert.name}
                 </div>
                 <div
                   style={{
@@ -96,10 +105,10 @@ export function PublicProfile({ nav, notify }) {
                     marginBottom: 10,
                   }}
                 >
-                  mindgigs.com/priya
+                  mindgigs.com/{expert.handle}
                 </div>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {['Product Strategy', 'SaaS', 'Fundraising', 'Go-to-Market'].map((t) => (
+                  {expert.tags?.map((t) => (
                     <span key={t} className="tag tag-gr">
                       {t}
                     </span>
@@ -124,8 +133,7 @@ export function PublicProfile({ nav, notify }) {
                 maxWidth: 580,
               }}
             >
-              Product strategist with 10+ years in SaaS. Ex-YC founder. I help early-stage startups
-              nail their product strategy, fundraising narrative, and go-to-market motion.
+              {expert.bio}
             </p>
             <div
               style={{
@@ -136,49 +144,114 @@ export function PublicProfile({ nav, notify }) {
                 color: 'var(--mu)',
               }}
             >
-              <span>⭐ 4.9 rating</span>
-              <span>📅 87 sessions completed</span>
-              <span>👥 24 subscribers</span>
+              <span>⭐ {expert.rating || 'New'} rating</span>
+              <span>📅 {expert.sessions || '0'} sessions completed</span>
+              <span>👥 {expert.rating ? '24' : '0'} subscribers</span>
             </div>
           </div>
         </div>
 
         {/* 1:1 Sessions */}
-        <div style={{ marginBottom: 32 }}>
-          <h3
-            style={{
-              fontFamily: 'var(--fu)',
-              fontWeight: 700,
-              color: 'var(--gd)',
-              marginBottom: 16,
-              fontSize: '1.1rem',
-            }}
-          >
-            🗓️ 1:1 Sessions
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {[
-              {
-                title: '60-min Strategy Deep Dive',
-                duration: '60 min',
-                price: '$250',
-                desc: 'Deep dive into your product strategy, roadmap, or fundraising pitch with actionable takeaways.',
-              },
-              {
-                title: '15-min Quick Call',
-                duration: '15 min',
-                price: '$40',
-                desc: 'Fast, focused answer to your most pressing question.',
-              },
-            ].map((s) => (
+        {expert.id === 1 || expert.sessionsList?.length > 0 ? (
+          <div style={{ marginBottom: 32 }}>
+            <h3
+              style={{
+                fontFamily: 'var(--fu)',
+                fontWeight: 700,
+                color: 'var(--gd)',
+                marginBottom: 16,
+                fontSize: '1.1rem',
+              }}
+            >
+              🗓️ 1:1 Sessions
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {(
+                expert.sessionsList || [
+                  {
+                    title: '60-min Strategy Deep Dive',
+                    duration: '60 min',
+                    price: '$250',
+                    desc: 'Deep dive into your product strategy, roadmap, or fundraising pitch with actionable takeaways.',
+                  },
+                  {
+                    title: '15-min Quick Call',
+                    duration: '15 min',
+                    price: '$40',
+                    desc: 'Fast, focused answer to your most pressing question.',
+                  },
+                ]
+              ).map((s) => (
+                <div
+                  key={s.title}
+                  className="card"
+                  style={{
+                    padding: 20,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 16,
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--fu)',
+                        fontWeight: 700,
+                        color: 'var(--gd)',
+                        marginBottom: 4,
+                      }}
+                    >
+                      {s.title}
+                    </div>
+                    <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 6 }}>
+                      ⏱ {s.duration}
+                    </div>
+                    <div style={{ fontSize: '.83rem', color: 'var(--sl)' }}>{s.desc}</div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--fu)',
+                        fontSize: '1.3rem',
+                        fontWeight: 800,
+                        color: 'var(--gd)',
+                        marginBottom: 10,
+                      }}
+                    >
+                      {s.price}
+                    </div>
+                    <button className="btn btn-gr btn-sm" onClick={() => nav('booking')}>
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {/* Subscriptions */}
+        {expert.id === 1 || expert.subscriptionsList?.length > 0 ? (
+          <div style={{ marginBottom: 32 }}>
+            <h3
+              style={{
+                fontFamily: 'var(--fu)',
+                fontWeight: 700,
+                color: 'var(--gd)',
+                marginBottom: 16,
+                fontSize: '1.1rem',
+              }}
+            >
+              ♻️ Subscriptions
+            </h3>
+            <div className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(255,155,81,.15)' }}>
               <div
-                key={s.title}
-                className="card"
                 style={{
-                  padding: 20,
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
                   gap: 16,
                 }}
               >
@@ -188,160 +261,105 @@ export function PublicProfile({ nav, notify }) {
                       fontFamily: 'var(--fu)',
                       fontWeight: 700,
                       color: 'var(--gd)',
-                      marginBottom: 4,
+                      fontSize: '1.05rem',
+                      marginBottom: 12,
                     }}
                   >
-                    {s.title}
+                    Monthly Mentorship Club
                   </div>
-                  <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 6 }}>
-                    ⏱ {s.duration}
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {[
+                      'Private WhatsApp group access',
+                      'Weekly group Q&A sessions',
+                      'Monthly 1:1 check-in (30 min)',
+                      'Resource library & templates',
+                    ].map((b) => (
+                      <li key={b} style={{ fontSize: '.83rem', color: 'var(--sl)', display: 'flex', gap: 8 }}>
+                        ✓ {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <div style={{ fontSize: '.75rem', color: 'var(--mu)', marginTop: 10 }}>
+                    Cancel anytime · 24 active members
                   </div>
-                  <div style={{ fontSize: '.83rem', color: 'var(--sl)' }}>{s.desc}</div>
                 </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div
-                    style={{
-                      fontFamily: 'var(--fu)',
-                      fontSize: '1.3rem',
-                      fontWeight: 800,
-                      color: 'var(--gd)',
-                      marginBottom: 10,
-                    }}
-                  >
-                    {s.price}
-                  </div>
-                  <button className="btn btn-gr btn-sm" onClick={() => nav('booking')}>
-                    Book Now
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: 'var(--fu)', fontSize: '2rem', fontWeight: 800, color: 'var(--gd)' }}>$199</div>
+                  <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 12 }}>/month</div>
+                  <button className="btn btn-gr" onClick={() => notify('Redirecting to Stripe checkout...')}>
+                    Subscribe →
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Subscriptions */}
-        <div style={{ marginBottom: 32 }}>
-          <h3
-            style={{
-              fontFamily: 'var(--fu)',
-              fontWeight: 700,
-              color: 'var(--gd)',
-              marginBottom: 16,
-              fontSize: '1.1rem',
-            }}
-          >
-            ♻️ Subscriptions
-          </h3>
-          <div className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(255,155,81,.15)' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                flexWrap: 'wrap',
-                gap: 16,
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    fontFamily: 'var(--fu)',
-                    fontWeight: 700,
-                    color: 'var(--gd)',
-                    fontSize: '1.05rem',
-                    marginBottom: 12,
-                  }}
-                >
-                  Monthly Mentorship Club
-                </div>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {[
-                    'Private WhatsApp group access',
-                    'Weekly group Q&A sessions',
-                    'Monthly 1:1 check-in (30 min)',
-                    'Resource library & templates',
-                  ].map((b) => (
-                    <li key={b} style={{ fontSize: '.83rem', color: 'var(--sl)', display: 'flex', gap: 8 }}>
-                      ✓ {b}
-                    </li>
-                  ))}
-                </ul>
-                <div style={{ fontSize: '.75rem', color: 'var(--mu)', marginTop: 10 }}>
-                  Cancel anytime · 24 active members
-                </div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--fu)', fontSize: '2rem', fontWeight: 800, color: 'var(--gd)' }}>$199</div>
-                <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 12 }}>/month</div>
-                <button className="btn btn-gr" onClick={() => notify('Redirecting to Stripe checkout...')}>
-                  Subscribe →
-                </button>
               </div>
             </div>
           </div>
-        </div>
+        ) : null}
 
         {/* Digital Products */}
-        <div style={{ marginBottom: 40 }}>
-          <h3
-            style={{
-              fontFamily: 'var(--fu)',
-              fontWeight: 700,
-              color: 'var(--gd)',
-              marginBottom: 16,
-              fontSize: '1.1rem',
-            }}
-          >
-            📦 Digital Products
-          </h3>
-          <div className="grid-3">
-            {[
-              { title: 'Pitch Deck Template', price: '$79', desc: 'Proven template used by 142 founders.' },
-              { title: 'SaaS Metrics Dashboard', price: '$49', desc: 'Track all key SaaS metrics in one place.' },
-              { title: 'Fundraising Playbook', price: '$129', desc: 'Step-by-step guide for raising a seed round.' },
-            ].map((p) => (
-              <div key={p.title} className="card" style={{ padding: 20 }}>
-                <div
-                  style={{
-                    height: 60,
-                    background: 'var(--gmt)',
-                    borderRadius: 'var(--rsm)',
-                    marginBottom: 14,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.5rem',
-                  }}
-                >
-                  📄
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'var(--fu)',
-                    fontWeight: 700,
-                    color: 'var(--gd)',
-                    fontSize: '.88rem',
-                    marginBottom: 6,
-                  }}
-                >
-                  {p.title}
-                </div>
-                <div style={{ fontSize: '.78rem', color: 'var(--sl)', marginBottom: 14 }}>{p.desc}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--fu)', fontWeight: 800, color: 'var(--gd)' }}>
-                    {p.price}
-                  </span>
-                  <button
-                    className="btn btn-pr btn-sm"
-                    onClick={() => notify('Redirecting to checkout...')}
+        {expert.id === 1 || expert.productsList?.length > 0 ? (
+          <div style={{ marginBottom: 40 }}>
+            <h3
+              style={{
+                fontFamily: 'var(--fu)',
+                fontWeight: 700,
+                color: 'var(--gd)',
+                marginBottom: 16,
+                fontSize: '1.1rem',
+              }}
+            >
+              📦 Digital Products
+            </h3>
+            <div className="grid-3">
+              {(
+                expert.productsList || [
+                  { title: 'Pitch Deck Template', price: '$79', desc: 'Proven template used by 142 founders.' },
+                  { title: 'SaaS Metrics Dashboard', price: '$49', desc: 'Track all key SaaS metrics in one place.' },
+                  { title: 'Fundraising Playbook', price: '$129', desc: 'Step-by-step guide for raising a seed round.' },
+                ]
+              ).map((p) => (
+                <div key={p.title} className="card" style={{ padding: 20 }}>
+                  <div
+                    style={{
+                      height: 60,
+                      background: 'var(--gmt)',
+                      borderRadius: 'var(--rsm)',
+                      marginBottom: 14,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem',
+                    }}
                   >
-                    Buy Now
-                  </button>
+                    📄
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--fu)',
+                      fontWeight: 700,
+                      color: 'var(--gd)',
+                      fontSize: '.88rem',
+                      marginBottom: 6,
+                    }}
+                  >
+                    {p.title}
+                  </div>
+                  <div style={{ fontSize: '.78rem', color: 'var(--sl)', marginBottom: 14 }}>{p.desc}</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: 'var(--fu)', fontWeight: 800, color: 'var(--gd)' }}>
+                      {p.price}
+                    </span>
+                    <button
+                      className="btn btn-pr btn-sm"
+                      onClick={() => notify('Redirecting to checkout...')}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {/* Profile Footer CTA */}
         <div style={{ background: 'var(--gd)', borderRadius: 'var(--rlg)', padding: 40, textAlign: 'center' }}>

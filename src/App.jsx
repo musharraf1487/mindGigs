@@ -21,7 +21,8 @@ import './styles/components.css';
 import './styles/pages.css';
 
 // Using mock data
-import { mockUsers } from './data/mockData';
+// Using mock data
+import { mockUsers, mockExperts } from './data/mockData';
 
 function LoginSelectorModal({ onClose, onSelect }) {
   return (
@@ -103,6 +104,8 @@ export default function App() {
   const [showLoginSelector, setShowLoginSelector] = useState(false);
   const [loginRole, setLoginRole] = useState(null);
   const [notifs, setNotifs] = useState([]);
+  const [experts, setExperts] = useState(mockExperts);
+  const [activeExpertId, setActiveExpertId] = useState(null);
 
   const notify = (msg, type = 'success') => {
     const id = Date.now();
@@ -128,7 +131,10 @@ export default function App() {
     notify('Logged out successfully.');
   };
 
-  const nav = (p) => setPage(p);
+  const nav = (p, ctx) => {
+    if (ctx?.expertId) setActiveExpertId(ctx.expertId);
+    setPage(p);
+  };
 
   return (
     <>
@@ -160,12 +166,19 @@ export default function App() {
         />
       )}
       {page === 'signup' && <SignupPage nav={nav} notify={notify} />}
-      {page === 'onboarding' && <OnboardingPage nav={nav} notify={notify} />}
+      {page === 'onboarding' && (
+        <OnboardingPage
+          nav={nav}
+          notify={notify}
+          addExpert={(e) => setExperts((prev) => [e, ...prev])}
+        />
+      )}
       {page === 'experts' && (
         <ExpertsDirectory
           nav={nav}
           notify={notify}
           onLogin={() => setShowLoginSelector(true)}
+          experts={experts}
         />
       )}
       {page === 'expert-dashboard' && user?.role === 'expert' && (
@@ -180,7 +193,13 @@ export default function App() {
       {page === 'client-dashboard' && user?.role === 'client' && (
         <ClientDashboard user={user} nav={nav} logout={logout} notify={notify} />
       )}
-      {page === 'public-profile' && <PublicProfile nav={nav} notify={notify} />}
+      {page === 'public-profile' && (
+        <PublicProfile
+          nav={nav}
+          notify={notify}
+          expert={experts.find((e) => e.id === activeExpertId) || experts[0]}
+        />
+      )}
       {page === 'booking' && <BookingFlow nav={nav} notify={notify} />}
     </>
   );

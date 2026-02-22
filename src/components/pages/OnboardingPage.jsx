@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 
-export function OnboardingPage({ nav, notify }) {
+export function OnboardingPage({ nav, notify, addExpert }) {
   const [step, setStep] = useState(0);
   const [offerTab, setOfferTab] = useState(0);
+
+  // Profile Setup State
+  const [bio, setBio] = useState('');
+  const [tags, setTags] = useState('');
+
+  // Offer Setup State
+  const [offerTitle, setOfferTitle] = useState('');
+  const [offerPrice, setOfferPrice] = useState('');
+  const [offerDesc, setOfferDesc] = useState('');
+  const [offerDuration, setOfferDuration] = useState('60 min');
+
   const steps = ['Profile Setup', 'Add First Offer', 'Payment Setup'];
 
   return (
@@ -95,6 +106,8 @@ export function OnboardingPage({ nav, notify }) {
                   className="textarea"
                   placeholder="Tell experts and visitors who you are and what you offer..."
                   style={{ minHeight: 80 }}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
                 />
               </div>
               <div className="field">
@@ -102,6 +115,8 @@ export function OnboardingPage({ nav, notify }) {
                 <input
                   className="input"
                   placeholder="e.g. Product Strategy, SaaS, Fundraising"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
                 />
               </div>
               <div className="field">
@@ -136,26 +151,28 @@ export function OnboardingPage({ nav, notify }) {
                 <>
                   <div className="field">
                     <label className="label">Session Title</label>
-                    <input className="input" placeholder="e.g. 60-min Strategy Deep Dive" />
+                    <input className="input" placeholder="e.g. 60-min Strategy Deep Dive" value={offerTitle} onChange={e => setOfferTitle(e.target.value)} />
                   </div>
                   <div className="field">
                     <label className="label">Duration</label>
-                    <select className="select w-full">
-                      <option>15 minutes</option>
-                      <option>30 minutes</option>
-                      <option selected>60 minutes</option>
-                      <option>Custom</option>
+                    <select className="select w-full" value={offerDuration} onChange={e => setOfferDuration(e.target.value)}>
+                      <option value="15 min">15 minutes</option>
+                      <option value="30 min">30 minutes</option>
+                      <option value="60 min">60 minutes</option>
+                      <option value="Custom">Custom</option>
                     </select>
                   </div>
                   <div className="field">
                     <label className="label">Price (USD)</label>
-                    <input className="input" type="number" placeholder="e.g. 150" />
+                    <input className="input" type="number" placeholder="e.g. 150" value={offerPrice} onChange={e => setOfferPrice(e.target.value)} />
                   </div>
                   <div className="field">
                     <label className="label">Description</label>
                     <textarea
                       className="textarea"
                       placeholder="What will you cover in this session?"
+                      value={offerDesc}
+                      onChange={e => setOfferDesc(e.target.value)}
                     />
                   </div>
                 </>
@@ -164,17 +181,19 @@ export function OnboardingPage({ nav, notify }) {
                 <>
                   <div className="field">
                     <label className="label">Subscription Name</label>
-                    <input className="input" placeholder="e.g. Monthly Mentorship Club" />
+                    <input className="input" placeholder="e.g. Monthly Mentorship Club" value={offerTitle} onChange={e => setOfferTitle(e.target.value)} />
                   </div>
                   <div className="field">
                     <label className="label">Monthly Price (USD)</label>
-                    <input className="input" type="number" placeholder="e.g. 99" />
+                    <input className="input" type="number" placeholder="e.g. 99" value={offerPrice} onChange={e => setOfferPrice(e.target.value)} />
                   </div>
                   <div className="field">
                     <label className="label">What's Included</label>
                     <textarea
                       className="textarea"
                       placeholder="Weekly Q&A, WhatsApp group access, monthly 1:1..."
+                      value={offerDesc}
+                      onChange={e => setOfferDesc(e.target.value)}
                     />
                   </div>
                 </>
@@ -183,11 +202,11 @@ export function OnboardingPage({ nav, notify }) {
                 <>
                   <div className="field">
                     <label className="label">Product Title</label>
-                    <input className="input" placeholder="e.g. The Ultimate SaaS Pitch Deck Template" />
+                    <input className="input" placeholder="e.g. The Ultimate SaaS Pitch Deck Template" value={offerTitle} onChange={e => setOfferTitle(e.target.value)} />
                   </div>
                   <div className="field">
                     <label className="label">Price (USD)</label>
-                    <input className="input" type="number" placeholder="e.g. 49" />
+                    <input className="input" type="number" placeholder="e.g. 49" value={offerPrice} onChange={e => setOfferPrice(e.target.value)} />
                   </div>
                   <div
                     style={{
@@ -304,8 +323,31 @@ export function OnboardingPage({ nav, notify }) {
               onClick={() => {
                 if (step < steps.length - 1) setStep((s) => s + 1);
                 else {
+                  // Create dynamic expert
+                  const newSession = offerTab === 0 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc, duration: offerDuration } : null;
+                  const newSub = offerTab === 1 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
+                  const newProduct = offerTab === 2 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
+
+                  const newExpert = {
+                    id: Date.now(),
+                    name: 'New Expert', // Placeholder since there's no name step in onboarding
+                    handle: 'newexpert',
+                    image: 'https://i.pravatar.cc/400?img=50',
+                    category: 'Business',
+                    tags: tags ? tags.split(',').map(t => t.trim()) : ['New Expert', 'Consulting'],
+                    bio: bio || 'Newly onboarded expert profile on mindGigs.',
+                    rating: 0,
+                    sessions: 0,
+                    startingPrice: offerPrice || 100,
+                    verified: false,
+                    sessionsList: newSession ? [newSession] : [],
+                    subscriptionsList: newSub ? [newSub] : [],
+                    productsList: newProduct ? [newProduct] : [],
+                  };
+                  if (addExpert) addExpert(newExpert);
+
                   notify('🎉 Profile live! Your page is ready.');
-                  nav('expert-dashboard');
+                  nav('experts');
                 }
               }}
             >

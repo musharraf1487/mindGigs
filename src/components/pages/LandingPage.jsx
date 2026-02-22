@@ -116,7 +116,7 @@ export function LandingPage({ nav, onLogin }) {
             <button className="btn btn-gr btn-xl" onClick={() => nav('signup')}>
               🟢 Create Your Profile
             </button>
-            <button className="btn btn-gh btn-xl" onClick={() => nav('public-profile')}>
+            <button className="btn btn-gh btn-xl" onClick={() => nav('experts')}>
               Explore Experts →
             </button>
           </div>

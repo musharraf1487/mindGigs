@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { mockExperts } from '../../data/mockData';
 
 const CATEGORIES = ['All', 'AI', 'Development', 'Marketing', 'Legal', 'Design', 'Business'];
 
@@ -96,7 +95,7 @@ function ExpertCard({ expert, nav }) {
                         fontWeight: 700,
                         fontSize: '.9rem',
                     }}
-                    onClick={() => nav('public-profile')}
+                    onClick={() => nav('public-profile', { expertId: expert.id })}
                 >
                     View Profile
                 </button>
@@ -105,12 +104,12 @@ function ExpertCard({ expert, nav }) {
     );
 }
 
-export function ExpertsDirectory({ nav, onLogin }) {
+export function ExpertsDirectory({ nav, onLogin, experts }) {
     const [search, setSearch] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
 
     const filtered = useMemo(() => {
-        return mockExperts.filter((e) => {
+        return experts.filter((e) => {
             // Map mock data categories to the UI categories shown in the image roughly
             const catMapping = {
                 'AI': 'Tech',
@@ -125,14 +124,19 @@ export function ExpertsDirectory({ nav, onLogin }) {
                 mappedCat = catMapping[activeCategory];
             }
 
-            const matchCat = activeCategory === 'All' || e.category === mappedCat || e.category === activeCategory;
+            // Just check if the expert category matches our UI filter or the mapped equivalent
+            const matchCat = activeCategory === 'All' ||
+                e.category === mappedCat ||
+                e.category === activeCategory ||
+                e.category.toLowerCase() === activeCategory.toLowerCase();
+
             const q = search.toLowerCase();
             const matchSearch =
                 !q ||
-                e.name.toLowerCase().includes(q) ||
-                e.tags.some((t) => t.toLowerCase().includes(q)) ||
-                e.category.toLowerCase().includes(q) ||
-                e.bio.toLowerCase().includes(q);
+                (e.name || '').toLowerCase().includes(q) ||
+                (e.tags || []).some((t) => t.toLowerCase().includes(q)) ||
+                (e.category || '').toLowerCase().includes(q) ||
+                (e.bio || '').toLowerCase().includes(q);
 
             return matchCat && matchSearch;
         });

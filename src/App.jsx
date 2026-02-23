@@ -20,9 +20,11 @@ import './styles/layout.css';
 import './styles/components.css';
 import './styles/pages.css';
 
-// Using mock data
-// Using mock data
+// Using mock data for fallback/initial state
 import { mockUsers, mockExperts } from './data/mockData';
+import { useAuth } from './context/AuthContext';
+import { db } from './config/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 function LoginSelectorModal({ onClose, onSelect }) {
   return (
@@ -99,13 +101,31 @@ function LoginSelectorModal({ onClose, onSelect }) {
 }
 
 export default function App() {
+  const { currentUser, userData, logout: firebaseLogout } = useAuth();
   const [page, setPage] = useState('home');
-  const [user, setUser] = useState(null);
   const [showLoginSelector, setShowLoginSelector] = useState(false);
   const [loginRole, setLoginRole] = useState(null);
   const [notifs, setNotifs] = useState([]);
   const [experts, setExperts] = useState(mockExperts);
   const [activeExpertId, setActiveExpertId] = useState(null);
+
+  React.useEffect(() => {
+    const fetchExperts = async () => {
+      try {
+        const q = query(
+          collection(db, 'users'),
+          where('role', '==', 'expert'),
+          where('onboardingComplete', '==', true)
+        );
+        const snapshot = await getDocs(q);
+        const liveExperts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        if (liveExperts.length > 0) setExperts(liveExperts);
+      } catch (err) {
+        console.error("Error fetching experts:", err);
+      }
+    };
+    fetchExperts();
+  }, [userData]); // Re-fetch loosely around login/state changes
 
   const notify = (msg, type = 'success') => {
     const id = Date.now();
@@ -113,20 +133,20 @@ export default function App() {
     setTimeout(() => setNotifs((p) => p.filter((n) => n.id !== id)), 3500);
   };
 
-  const login = (role) => {
-    const u = mockUsers[role];
-    setUser(u);
-    setShowLoginSelector(false);
-    setLoginRole(null);
-    if (role === 'expert') setPage('expert-dashboard');
-    else if (role === 'admin') setPage('admin-dashboard');
-    else if (role === 'affiliate') setPage('affiliate-dashboard');
-    else if (role === 'client') setPage('client-dashboard');
-    notify(`Welcome back, ${u.name}!`);
-  };
+  React.useEffect(() => {
+    // If user data loads and we are on the login page, redirect them to dashboard
+    if (userData && page === 'login') {
+      const { role } = userData;
+      if (role === 'expert') setPage('expert-dashboard');
+      else if (role === 'admin') setPage('admin-dashboard');
+      else if (role === 'affiliate') setPage('affiliate-dashboard');
+      else if (role === 'client') setPage('client-dashboard');
+      notify(`Welcome back!`);
+    }
+  }, [userData, page]);
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    await firebaseLogout();
     setPage('home');
     notify('Logged out successfully.');
   };
@@ -159,7 +179,6 @@ export default function App() {
       {page === 'login' && (
         <LoginPage
           role={loginRole}
-          login={login}
           nav={nav}
           onSwitchRole={() => setShowLoginSelector(true)}
           notify={notify}
@@ -181,17 +200,17 @@ export default function App() {
           experts={experts}
         />
       )}
-      {page === 'expert-dashboard' && user?.role === 'expert' && (
-        <ExpertDashboard user={user} nav={nav} logout={logout} notify={notify} />
+      {page === 'expert-dashboard' && userData?.role === 'expert' && (
+        <ExpertDashboard user={userData} nav={nav} logout={logout} notify={notify} />
       )}
-      {page === 'admin-dashboard' && user?.role === 'admin' && (
-        <AdminDashboard user={user} nav={nav} logout={logout} notify={notify} />
+      {page === 'admin-dashboard' && userData?.role === 'admin' && (
+        <AdminDashboard user={userData} nav={nav} logout={logout} notify={notify} />
       )}
-      {page === 'affiliate-dashboard' && user?.role === 'affiliate' && (
-        <AffiliateDashboard user={user} nav={nav} logout={logout} notify={notify} />
+      {page === 'affiliate-dashboard' && userData?.role === 'affiliate' && (
+        <AffiliateDashboard user={userData} nav={nav} logout={logout} notify={notify} />
       )}
-      {page === 'client-dashboard' && user?.role === 'client' && (
-        <ClientDashboard user={user} nav={nav} logout={logout} notify={notify} />
+      {page === 'client-dashboard' && userData?.role === 'client' && (
+        <ClientDashboard user={userData} nav={nav} logout={logout} notify={notify} />
       )}
       {page === 'public-profile' && (
         <PublicProfile

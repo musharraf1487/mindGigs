@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 function AuthShell({ children, nav }) {
   return (
@@ -44,7 +45,33 @@ function AuthShell({ children, nav }) {
 }
 
 export function SignupPage({ nav, notify }) {
+  const { signup } = useAuth();
   const [agreed, setAgreed] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSignup = async () => {
+    if (!agreed) return notify('Please agree to terms first.', 'warn');
+    if (!name || !email || !pass || !username) return notify('Please fill all fields', 'warn');
+
+    setLoading(true);
+    try {
+      await signup(email, pass, 'expert', {
+        name,
+        handle: username,
+      });
+      notify("Account created! Let's set up your profile.");
+      nav('onboarding');
+    } catch (err) {
+      console.error('Signup Error:', err);
+      notify(err.message?.replace('Firebase: ', '') || 'Failed to create account.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthShell nav={nav}>
@@ -57,7 +84,12 @@ export function SignupPage({ nav, notify }) {
       </p>
       <div className="field">
         <label className="label">Full Name</label>
-        <input className="input" placeholder="Priya Sharma" />
+        <input
+          className="input"
+          placeholder="Priya Sharma"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </div>
       <div className="field">
         <label className="label">Username</label>
@@ -74,16 +106,33 @@ export function SignupPage({ nav, notify }) {
           >
             mindgigs.com/
           </span>
-          <input className="input" style={{ paddingLeft: 120 }} placeholder="yourname" />
+          <input
+            className="input"
+            style={{ paddingLeft: 120 }}
+            placeholder="yourname"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
       </div>
       <div className="field">
         <label className="label">Email Address</label>
-        <input className="input" placeholder="your@email.com" />
+        <input
+          className="input"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div className="field">
         <label className="label">Password</label>
-        <input className="input" type="password" placeholder="Min 8 characters" />
+        <input
+          className="input"
+          type="password"
+          placeholder="Min 8 characters"
+          value={pass}
+          onChange={(e) => setPass(e.target.value)}
+        />
       </div>
       <div className="field">
         <label className="label">Referral Code (Optional)</label>
@@ -98,14 +147,10 @@ export function SignupPage({ nav, notify }) {
       </label>
       <button
         className="btn btn-gr w-full btn-lg"
-        onClick={() => {
-          if (agreed) {
-            notify('Account created! Let\'s set up your profile.');
-            nav('onboarding');
-          } else notify('Please agree to terms first.', 'warn');
-        }}
+        onClick={handleSignup}
+        disabled={loading}
       >
-        Create Account →
+        {loading ? 'Creating Account...' : 'Create Account →'}
       </button>
       <p style={{ textAlign: 'center', marginTop: 20, fontSize: '.82rem', color: 'var(--mu)' }}>
         Already have an account?{' '}

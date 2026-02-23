@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { mockUsers } from '../../data/mockData';
+import { useAuth } from '../../context/AuthContext';
 
 function AuthShell({ children, nav }) {
   return (
@@ -46,10 +46,12 @@ function AuthShell({ children, nav }) {
   );
 }
 
-export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
-  const [email, setEmail] = useState(role ? mockUsers[role]?.email : '');
-  const [pass, setPass] = useState('demo');
+export function LoginPage({ role, nav, onSwitchRole, notify }) {
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
   const [forgot, setForgot] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const roleConfig = {
     expert: { label: 'Expert Portal', color: 'var(--gb)', icon: '🧠', badge: 'role-expert' },
@@ -69,10 +71,19 @@ export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
   };
   const rc = roleConfig[role] || roleConfig.expert;
 
-  const handleLogin = () => {
-    const u = Object.values(mockUsers).find((u) => u.email === email && u.pass === pass);
-    if (u) login(u.role);
-    else notify('Invalid credentials. Try: expert@mindgigs.com / demo', 'error');
+  const handleLogin = async () => {
+    if (!email || !pass) return notify('Please enter email and password', 'error');
+    setLoading(true);
+    try {
+      await login(email, pass);
+      // Let App.jsx handle the navigation redirect using AuthContext state
+    } catch (err) {
+      console.error('Login Error:', err);
+      // Provide a clean, user-friendly error message if available
+      notify(err.message?.replace('Firebase: ', '') || 'Invalid credentials. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (forgot)
@@ -214,8 +225,12 @@ export function LoginPage({ role, login, nav, onSwitchRole, notify }) {
           Forgot Password?
         </span>
       </div>
-      <button className="btn btn-gr w-full btn-lg" onClick={handleLogin}>
-        Sign In →
+      <button
+        className="btn btn-gr w-full btn-lg"
+        onClick={handleLogin}
+        disabled={loading}
+      >
+        {loading ? 'Signing In...' : 'Sign In →'}
       </button>
       <p style={{ textAlign: 'center', marginTop: 20, fontSize: '.82rem', color: 'var(--mu)' }}>
         Don't have an account?{' '}

@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { db, storage } from '../../config/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export function OnboardingPage({ nav, notify, addExpert }) {
   const [step, setStep] = useState(0);
@@ -13,6 +17,20 @@ export function OnboardingPage({ nav, notify, addExpert }) {
   const [offerPrice, setOfferPrice] = useState('');
   const [offerDesc, setOfferDesc] = useState('');
   const [offerDuration, setOfferDuration] = useState('60 min');
+
+  const { currentUser, userData } = useAuth();
+  const fileInputRef = useRef(null);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
 
   const steps = ['Profile Setup', 'Add First Offer', 'Payment Setup'];
 
@@ -85,20 +103,28 @@ export function OnboardingPage({ nav, notify, addExpert }) {
                   width: 80,
                   height: 80,
                   borderRadius: '50%',
-                  background: 'var(--gp)',
+                  background: avatarPreview ? `url(${avatarPreview}) center/cover` : 'var(--gp)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '2rem',
+                  fontSize: avatarPreview ? '0' : '2rem',
                   margin: '0 auto 24px',
                   border: '3px dashed rgba(255,155,81,.3)',
                   cursor: 'pointer',
                 }}
+                onClick={() => fileInputRef.current?.click()}
               >
                 📷
               </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
               <p style={{ textAlign: 'center', fontSize: '.78rem', color: 'var(--mu)', marginBottom: 24 }}>
-                Click to upload profile photo
+                {avatarPreview ? 'Photo selected. Click to change.' : 'Click to upload profile photo'}
               </p>
               <div className="field">
                 <label className="label">Bio (max 300 chars)</label>
@@ -320,38 +346,56 @@ export function OnboardingPage({ nav, notify, addExpert }) {
             )}
             <button
               className="btn btn-gr flex-1 btn-lg"
-              onClick={() => {
-                if (step < steps.length - 1) setStep((s) => s + 1);
-                else {
-                  // Create dynamic expert
-                  const newSession = offerTab === 0 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc, duration: offerDuration } : null;
-                  const newSub = offerTab === 1 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
-                  const newProduct = offerTab === 2 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
+              disabled={isSubmitting}
+              onClick={async () => {
+                if (step < steps.length - 1) {
+                  setStep((s) => s + 1);
+                } else {
+                  if (!currentUser) return notify('User not authenticated', 'error');
+                  setIsSubmitting(true);
+                  try {
+                    let photoUrl = userData?.image || 'https://i.pravatar.cc/400?img=50';
 
-                  const newExpert = {
-                    id: Date.now(),
-                    name: 'New Expert', // Placeholder since there's no name step in onboarding
-                    handle: 'newexpert',
-                    image: 'https://i.pravatar.cc/400?img=50',
-                    category: 'Business',
-                    tags: tags ? tags.split(',').map(t => t.trim()) : ['New Expert', 'Consulting'],
-                    bio: bio || 'Newly onboarded expert profile on mindGigs.',
-                    rating: 0,
-                    sessions: 0,
-                    startingPrice: offerPrice || 100,
-                    verified: false,
-                    sessionsList: newSession ? [newSession] : [],
-                    subscriptionsList: newSub ? [newSub] : [],
-                    productsList: newProduct ? [newProduct] : [],
-                  };
-                  if (addExpert) addExpert(newExpert);
+                    if (avatarFile) {
+                      const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+                      await uploadBytes(storageRef, avatarFile);
+                      photoUrl = await getDownloadURL(storageRef);
+                    }
 
-                  notify('🎉 Profile live! Your page is ready.');
-                  nav('experts');
+                    const newSession = offerTab === 0 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc, duration: offerDuration } : null;
+                    const newSub = offerTab === 1 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
+                    const newProduct = offerTab === 2 && offerTitle ? { title: offerTitle, price: `$${offerPrice || 0}`, desc: offerDesc } : null;
+
+                    const expertUpdates = {
+                      image: photoUrl,
+                      category: 'Business', // Default or could be a field
+                      tags: tags ? tags.split(',').map(t => t.trim()) : ['New Expert', 'Consulting'],
+                      bio: bio || 'Newly onboarded expert profile on mindGigs.',
+                      rating: 0,
+                      sessions: 0,
+                      startingPrice: offerPrice || 100,
+                      verified: false,
+                      sessionsList: newSession ? [newSession] : [],
+                      subscriptionsList: newSub ? [newSub] : [],
+                      productsList: newProduct ? [newProduct] : [],
+                      onboardingComplete: true
+                    };
+
+                    await updateDoc(doc(db, 'users', currentUser.uid), expertUpdates);
+
+                    if (addExpert) addExpert({ ...userData, ...expertUpdates, id: currentUser.uid });
+                    notify('🎉 Profile live! Your page is ready.');
+                    nav('experts');
+                  } catch (err) {
+                    console.error('Error saving profile:', err);
+                    notify('Failed to save profile', 'error');
+                  } finally {
+                    setIsSubmitting(false);
+                  }
                 }
               }}
             >
-              {step < steps.length - 1 ? 'Continue →' : '🚀 Launch My Profile'}
+              {isSubmitting ? 'Launching...' : (step < steps.length - 1 ? 'Continue →' : '🚀 Launch My Profile')}
             </button>
           </div>
         </div>

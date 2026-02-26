@@ -1,31 +1,4 @@
 /* Mock Data */
-export const mockUsers = {
-  expert: {
-    email: 'expert@mindgigs.com',
-    pass: 'demo',
-    role: 'expert',
-    name: 'Priya Sharma',
-    handle: 'priya',
-  },
-  admin: {
-    email: 'admin@mindgigs.com',
-    pass: 'demo',
-    role: 'admin',
-    name: 'Admin User',
-  },
-  affiliate: {
-    email: 'aff@mindgigs.com',
-    pass: 'demo',
-    role: 'affiliate',
-    name: 'Zaid Malik',
-  },
-  client: {
-    email: 'client@mindgigs.com',
-    pass: 'demo',
-    role: 'client',
-    name: 'Aisha Khan',
-  },
-};
 
 export const expertData = {
   stats: [

@@ -21,7 +21,7 @@ import './styles/components.css';
 import './styles/pages.css';
 
 // Using mock data for fallback/initial state
-import { mockUsers, mockExperts } from './data/mockData';
+import { mockExperts } from './data/mockData';
 import { useAuth } from './context/AuthContext';
 import { db } from './config/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';

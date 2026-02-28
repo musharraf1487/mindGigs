@@ -154,6 +154,9 @@ export default function App() {
 
   const nav = (p, ctx) => {
     if (ctx?.expertId) setActiveExpertId(ctx.expertId);
+    if (p === 'login' && ctx?.role) {
+      setLoginRole(ctx.role);
+    }
     setPage(p);
   };
 

@@ -42,6 +42,25 @@ export function AuthProvider({ children }) {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
+    // Mock Login for demo purposes
+    function mockLogin(role) {
+        const mockUser = {
+            uid: `mock-${role}`,
+            email: 'demo',
+            isMock: true
+        };
+        const mockData = {
+            uid: mockUser.uid,
+            email: 'demo',
+            role: role,
+            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+            onboardingComplete: true
+        };
+        setCurrentUser(mockUser);
+        setUserData(mockData);
+        setUserRole(role);
+    }
+
     // Log out
     function logout() {
         return signOut(auth);
@@ -88,6 +107,7 @@ export function AuthProvider({ children }) {
         userData,
         signup,
         login,
+        mockLogin,
         logout,
     };
 

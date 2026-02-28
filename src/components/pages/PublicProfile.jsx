@@ -26,7 +26,7 @@ export function PublicProfile({ nav, notify, expert }) {
           }}
           onClick={() => nav('home')}
         >
-          🌿 mindGigs
+          mindGigs
         </span>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn btn-gh btn-sm" onClick={() => notify('Profile link copied!')}>
@@ -232,7 +232,7 @@ export function PublicProfile({ nav, notify, expert }) {
         ) : null}
 
         {/* Subscriptions */}
-        {expert.id === 1 || expert.subscriptionsList?.length > 0 ? (
+        {(expert.subscriptionsList || expert.subscriptions)?.length > 0 ? (
           <div style={{ marginBottom: 32 }}>
             <h3
               style={{
@@ -245,52 +245,58 @@ export function PublicProfile({ nav, notify, expert }) {
             >
               ♻️ Subscriptions
             </h3>
-            <div className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(255,155,81,.15)' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  flexWrap: 'wrap',
-                  gap: 16,
-                }}
-              >
-                <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {(expert.subscriptionsList || expert.subscriptions).map((sub) => (
+                <div key={sub.id || sub.title} className="card" style={{ padding: 24, background: 'var(--gmt)', border: '1.5px solid rgba(255,155,81,.15)' }}>
                   <div
                     style={{
-                      fontFamily: 'var(--fu)',
-                      fontWeight: 700,
-                      color: 'var(--gd)',
-                      fontSize: '1.05rem',
-                      marginBottom: 12,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      flexWrap: 'wrap',
+                      gap: 16,
                     }}
                   >
-                    Monthly Mentorship Club
-                  </div>
-                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {[
-                      'Private WhatsApp group access',
-                      'Weekly group Q&A sessions',
-                      'Monthly 1:1 check-in (30 min)',
-                      'Resource library & templates',
-                    ].map((b) => (
-                      <li key={b} style={{ fontSize: '.83rem', color: 'var(--sl)', display: 'flex', gap: 8 }}>
-                        ✓ {b}
-                      </li>
-                    ))}
-                  </ul>
-                  <div style={{ fontSize: '.75rem', color: 'var(--mu)', marginTop: 10 }}>
-                    Cancel anytime · 24 active members
+                    <div style={{ flex: 1 }}>
+                      <div
+                        style={{
+                          fontFamily: 'var(--fu)',
+                          fontWeight: 700,
+                          color: 'var(--gd)',
+                          fontSize: '1.05rem',
+                          marginBottom: 12,
+                        }}
+                      >
+                        {sub.title}
+                      </div>
+                      <p style={{ fontSize: '.83rem', color: 'var(--sl)', marginBottom: 12 }}>
+                        {sub.desc}
+                      </p>
+                      <ul style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {(sub.features || [
+                          'Private WhatsApp group access',
+                          'Weekly group Q&A sessions',
+                          'Monthly 1:1 check-in (30 min)',
+                          'Resource library & templates',
+                        ]).map((b) => (
+                          <li key={b} style={{ fontSize: '.83rem', color: 'var(--sl)', display: 'flex', gap: 8 }}>
+                            ✓ {b}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: 'var(--fu)', fontSize: '2rem', fontWeight: 800, color: 'var(--gd)' }}>
+                        {sub.price.includes('$') ? sub.price.split('/')[0] : `$${sub.price}`}
+                      </div>
+                      <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 12 }}>/month</div>
+                      <button className="btn btn-gr" onClick={() => notify('Redirecting to Stripe checkout...')}>
+                        Subscribe →
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'var(--fu)', fontSize: '2rem', fontWeight: 800, color: 'var(--gd)' }}>$199</div>
-                  <div style={{ fontSize: '.78rem', color: 'var(--mu)', marginBottom: 12 }}>/month</div>
-                  <button className="btn btn-gr" onClick={() => notify('Redirecting to Stripe checkout...')}>
-                    Subscribe →
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         ) : null}

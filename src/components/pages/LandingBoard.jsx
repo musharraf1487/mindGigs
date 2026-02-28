@@ -177,7 +177,8 @@ const SUBSCRIPTIONS = [
             "Exclusive templates and resources"
         ],
         icon: MessageSquare,
-        color: "lb-color-green"
+        color: "lb-color-green",
+        expertId: 8
     },
     {
         title: "AI Pro Network",
@@ -192,7 +193,8 @@ const SUBSCRIPTIONS = [
         ],
         icon: Zap,
         color: "lb-color-blue",
-        popular: true
+        popular: true,
+        expertId: 2
     },
     {
         title: "Strategic Advisory Access",
@@ -206,7 +208,8 @@ const SUBSCRIPTIONS = [
             "Quarterly performance review"
         ],
         icon: ShieldCheck,
-        color: "lb-color-purple"
+        color: "lb-color-purple",
+        expertId: 1
     }
 ];
 
@@ -224,6 +227,11 @@ export function LandingBoard({ nav, onLogin }) {
     const handleJoinAsExpert = () => {
         setIsMenuOpen(false);
         nav('home');
+    };
+
+    const handleBecomePartner = () => {
+        setIsMenuOpen(false);
+        nav('login', { role: 'affiliate' });
     };
 
     return (
@@ -570,7 +578,12 @@ export function LandingBoard({ nav, onLogin }) {
                                         </div>
                                         <p className="lb-sub-price-label">per month</p>
                                     </div>
-                                    <button className="lb-btn-subscribe">Subscribe</button>
+                                    <button
+                                        className="lb-btn-subscribe"
+                                        onClick={() => nav('public-profile', { expertId: plan.expertId })}
+                                    >
+                                        Subscribe
+                                    </button>
                                 </div>
                             </motion.div>
                         ))}
@@ -596,7 +609,7 @@ export function LandingBoard({ nav, onLogin }) {
                                 <p>Commission on second-tier referrals</p>
                             </div>
                         </div>
-                        <button className="lb-btn-primary-sm" onClick={handleJoinAsExpert}>Become a Partner</button>
+                        <button className="lb-btn-primary-sm" onClick={handleBecomePartner}>Become a Partner</button>
                     </div>
                     <div className="lb-affiliate-card">
                         <div className="lb-rel" style={{ zIndex: 10 }}>

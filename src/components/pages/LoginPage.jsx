@@ -35,7 +35,7 @@ function AuthShell({ children, nav }) {
               color: 'var(--gd)',
             }}
           >
-            🌿 mindGigs
+            mindGigs
           </span>
         </div>
         <div className="card" style={{ padding: 40 }}>
@@ -47,7 +47,7 @@ function AuthShell({ children, nav }) {
 }
 
 export function LoginPage({ role, nav, onSwitchRole, notify }) {
-  const { login } = useAuth();
+  const { login, mockLogin } = useAuth();
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [forgot, setForgot] = useState(false);
@@ -73,13 +73,19 @@ export function LoginPage({ role, nav, onSwitchRole, notify }) {
 
   const handleLogin = async () => {
     if (!email || !pass) return notify('Please enter email and password', 'error');
+
+    // Check for demo credentials
+    if (email === 'demo' && pass === 'demo') {
+      mockLogin(role || 'expert');
+      notify('Demo login successful!', 'success');
+      return;
+    }
+
     setLoading(true);
     try {
       await login(email, pass);
-      // Let App.jsx handle the navigation redirect using AuthContext state
     } catch (err) {
       console.error('Login Error:', err);
-      // Provide a clean, user-friendly error message if available
       notify(err.message?.replace('Firebase: ', '') || 'Invalid credentials. Please try again.', 'error');
     } finally {
       setLoading(false);
@@ -194,12 +200,12 @@ export function LoginPage({ role, nav, onSwitchRole, notify }) {
       )}
 
       <div className="field">
-        <label className="label">Email Address</label>
+        <label className="label">Username</label>
         <input
           className="input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
+          placeholder="your username"
         />
       </div>
       <div className="field">
@@ -251,7 +257,7 @@ export function LoginPage({ role, nav, onSwitchRole, notify }) {
           color: 'var(--gm)',
         }}
       >
-        <strong>Demo:</strong> expert@mindgigs.com · client@mindgigs.com · admin@mindgigs.com | pass: demo
+        <strong>Demo:</strong> username: demo | pass: demo
       </div>
     </AuthShell>
   );

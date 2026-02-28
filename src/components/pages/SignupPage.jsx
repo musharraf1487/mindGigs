@@ -35,7 +35,7 @@ function AuthShell({ children, nav }) {
               color: 'var(--gd)',
             }}
           >
-            🌿 mindGigs
+            mindGigs
           </span>
         </div>
         <div className="card" style={{ padding: 40 }}>{children}</div>

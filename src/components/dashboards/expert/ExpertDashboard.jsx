@@ -14,15 +14,17 @@ export function ExpertDashboard({ user, nav, logout, notify }) {
   const [active, setActive] = useState('overview');
 
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'offers', label: 'My Offers', icon: '💼' },
-    { id: 'bookings', label: 'Bookings', icon: '📅' },
-    { id: 'subscriptions', label: 'Subscriptions', icon: '🔄' },
-    { id: 'products', label: 'Digital Products', icon: '🎁' },
-    { id: 'affiliate', label: 'Affiliate', icon: '🚀' },
-    { id: 'earnings', label: 'Earnings', icon: '💰' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'overview', label: 'Overview', icon: '📊', group: 'MAIN' },
+    { id: 'offers', label: 'My Offers', icon: '💼', group: 'MANAGEMENT' },
+    { id: 'bookings', label: 'Bookings', icon: '📅', group: 'MANAGEMENT' },
+    { id: 'subscriptions', label: 'Subscriptions', icon: '🔄', group: 'MANAGEMENT' },
+    { id: 'products', label: 'Digital Products', icon: '🎁', group: 'MANAGEMENT' },
+    { id: 'affiliate', label: 'Affiliate', icon: '🚀', group: 'NETWORK' },
+    { id: 'earnings', label: 'Earnings', icon: '💰', group: 'NETWORK' },
+    { id: 'settings', label: 'Settings', icon: '⚙️', group: 'ACCOUNT' },
   ];
+
+  const groups = ['MAIN', 'MANAGEMENT', 'NETWORK', 'ACCOUNT'];
 
   const renderPage = () => {
     switch (active) {
@@ -48,53 +50,88 @@ export function ExpertDashboard({ user, nav, logout, notify }) {
   };
 
   const Sidebar = () => (
-    <div className="sidebar-nav">
-      <div style={{ padding: '20px 10px' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <div style={{ fontSize: '14px', fontWeight: '500', color: '#666', marginBottom: '8px' }}>
-            {user.name}
+    <div className="sidebar">
+      {/* Logo */}
+      <div className="sidebar-logo">
+        <div className="sidebar-logo-dot" />
+        <span className="sidebar-logo-mark">mindGigs</span>
+        <span className="sidebar-role-badge role-expert">Expert</span>
+      </div>
+
+      {/* Navigation */}
+      <nav className="sidebar-nav">
+        {groups.map(group => {
+          const items = navItems.filter(i => i.group === group);
+          return (
+            <div key={group}>
+              <div className="nav-group-label">{group}</div>
+              {items.map(item => (
+                <button
+                  key={item.id}
+                  className={`nav-item ${active === item.id ? 'active' : ''}`}
+                  onClick={() => setActive(item.id)}
+                >
+                  <span className="nav-icon">{item.icon}</span>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* Footer */}
+      <div className="sidebar-footer">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+          <div className="topbar-avatar" style={{ width: 32, height: 32, fontSize: '0.8rem' }}>🧠</div>
+          <div style={{ overflow: 'hidden' }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {user.name}
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>Certified Expert</div>
           </div>
-          <div style={{ fontSize: '12px', color: '#999' }}>Expert</div>
         </div>
-        {navItems.map(item => (
-          <div
-            key={item.id}
-            className={`nav-item ${active === item.id ? 'active' : ''}`}
-            onClick={() => setActive(item.id)}
-            style={{ cursor: 'pointer', padding: '10px 12px', marginBottom: '8px', borderRadius: '6px', fontWeight: active === item.id ? '500' : '400' }}
-          >
-            <span style={{ marginRight: '8px' }}>{item.icon}</span>
-            {item.label}
-          </div>
-        ))}
         <button
           onClick={() => {
             logout();
             nav('home');
           }}
           style={{
-            marginTop: '20px',
             width: '100%',
-            padding: '10px',
-            border: 'none',
+            padding: '8px',
             borderRadius: '6px',
-            backgroundColor: '#f5f5f5',
+            background: 'rgba(232,68,68,0.12)',
+            color: '#e84444',
+            fontSize: '0.82rem',
+            fontWeight: 600,
             cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: '500',
-            color: '#e74c3c',
+            border: '1px solid rgba(232,68,68,0.2)',
+            transition: 'all 0.2s',
           }}
+          onMouseOver={e => e.currentTarget.style.background = 'rgba(232,68,68,0.22)'}
+          onMouseOut={e => e.currentTarget.style.background = 'rgba(232,68,68,0.12)'}
         >
-          Logout
+          🚪 Logout
         </button>
       </div>
+    </div>
+  );
+
+  const topbarRight = (
+    <div className="topbar-user">
+      <div style={{ fontSize: '0.82rem', color: '#666' }}>
+        {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+      </div>
+      <div className="topbar-avatar">🧠</div>
+      <div className="topbar-name">{user.name}</div>
     </div>
   );
 
   return (
     <DashShell
       sidebar={<Sidebar />}
-      topbarTitle={navItems.find(i => i.id === active)?.label || 'Dashboard'}
+      topbarTitle={`✨ ${navItems.find(i => i.id === active)?.label || 'Dashboard'}`}
+      topbarRight={topbarRight}
     >
       {renderPage()}
     </DashShell>

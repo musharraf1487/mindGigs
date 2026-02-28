@@ -150,6 +150,20 @@ export const mockExperts = [
     sessions: 87,
     startingPrice: 40,
     verified: true,
+    subscriptions: [
+      {
+        id: 'sub-adv',
+        title: 'Strategic Advisory Access',
+        price: '$199/mo',
+        desc: 'For serious professionals who want personalized guidance.',
+        features: [
+          "Small-group advisory calls",
+          "Personalized growth roadmap",
+          "Direct expert feedback",
+          "Quarterly performance review"
+        ]
+      }
+    ]
   },
   {
     id: 2,
@@ -163,6 +177,20 @@ export const mockExperts = [
     sessions: 134,
     startingPrice: 75,
     verified: true,
+    subscriptions: [
+      {
+        id: 'sub-pro',
+        title: 'AI Pro Network',
+        price: '$99/mo',
+        desc: 'Advanced networking and live workshops for AI practitioners',
+        features: [
+          "Monthly Live Strategy Workshop",
+          "Case Study Breakdowns",
+          "Direct Expert Feedback",
+          "Priority Q&A"
+        ]
+      }
+    ]
   },
   {
     id: 3,
@@ -241,6 +269,20 @@ export const mockExperts = [
     sessions: 73,
     startingPrice: 100,
     verified: true,
+    subscriptions: [
+      {
+        id: 'sub-ins',
+        title: 'AI Insiders Community',
+        price: '$49/mo',
+        desc: 'Weekly WhatsApp group with exclusive AI insights and networking',
+        features: [
+          "Weekly AI insights and trends",
+          "Private community access",
+          "Monthly Q&A sessions",
+          "Exclusive templates and resources"
+        ]
+      }
+    ]
   },
 ];
 

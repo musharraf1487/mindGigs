@@ -61,7 +61,7 @@ export function OnboardingPage({ nav, notify, addExpert }) {
               color: 'var(--gd)',
             }}
           >
-            🌿 mindGigs
+            mindGigs
           </span>
           <p style={{ fontSize: '.82rem', color: 'var(--mu)', marginTop: 4 }}>
             Expert Onboarding · Step {step + 1} of {steps.length}

@@ -2,7 +2,7 @@ import React from 'react';
 
 export function Overview({ user, adminData, notify }) {
   const stats = [
-    { label: 'Platform Revenue', val: adminData?.stats?.[1]?.val || '$0', ch: adminData?.stats?.[1]?.ch, color: '#ffb27a', icon: '💰' },
+    { label: 'Platform Revenue', val: adminData?.stats?.[1]?.val || '$0', ch: adminData?.stats?.[1]?.ch, color: '#547792', icon: '💰' },
     { label: 'Total Users', val: adminData?.stats?.[0]?.val || '0', ch: adminData?.stats?.[0]?.ch, color: '#e8c547', icon: '👥' },
     { label: 'Active Experts', val: adminData?.stats?.[2]?.val || '0', ch: adminData?.stats?.[2]?.ch, color: '#1ab8a0', icon: '🧠' },
     { label: 'Total Transactions', val: adminData?.stats?.[3]?.val || '0', ch: adminData?.stats?.[3]?.ch, color: '#7c4ecb', icon: '💳' },

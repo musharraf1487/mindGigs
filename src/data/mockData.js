@@ -10,7 +10,7 @@ export const expertData = {
   revenueChartBars: [38, 52, 44, 68, 72, 58, 80, 88, 76, 94, 85, 100],
   revenueMonths: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
   revenueMix: [
-    { label: 'Sessions', percentage: 46, color: '#ffb27a' },
+    { label: 'Sessions', percentage: 46, color: '#547792' },
     { label: 'Subscriptions', percentage: 35, color: '#1ab8a0' },
     { label: 'Affiliates', percentage: 19, color: '#e8c547' },
   ],

@@ -8,6 +8,7 @@ import { OnboardingPage } from './components/pages/OnboardingPage';
 import { PublicProfile } from './components/pages/PublicProfile';
 import { BookingFlow } from './components/pages/BookingFlow';
 import { ExpertsDirectory } from './components/pages/ExpertsDirectory';
+import { LandingBoard } from './components/pages/LandingBoard';
 import { ExpertDashboard } from './components/dashboards/expert/ExpertDashboard';
 import { AdminDashboard } from './components/dashboards/admin/AdminDashboard';
 import { AffiliateDashboard } from './components/dashboards/affiliate/AffiliateDashboard';
@@ -102,7 +103,7 @@ function LoginSelectorModal({ onClose, onSelect }) {
 
 export default function App() {
   const { currentUser, userData, logout: firebaseLogout } = useAuth();
-  const [page, setPage] = useState('home');
+  const [page, setPage] = useState('landingboard');
   const [showLoginSelector, setShowLoginSelector] = useState(false);
   const [loginRole, setLoginRole] = useState(null);
   const [notifs, setNotifs] = useState([]);
@@ -191,6 +192,9 @@ export default function App() {
           notify={notify}
           addExpert={(e) => setExperts((prev) => [e, ...prev])}
         />
+      )}
+      {page === 'landingboard' && (
+        <LandingBoard nav={nav} onLogin={() => setShowLoginSelector(true)} />
       )}
       {page === 'experts' && (
         <ExpertsDirectory

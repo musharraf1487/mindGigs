@@ -11,23 +11,23 @@ export function AdminDashboard({ user, nav, logout, notify }) {
   const [active, setActive] = useState('overview');
 
   const navItems = [
-    { id: 'overview',     label: 'Overview',      icon: '📊', group: 'MAIN' },
-    { id: 'users',        label: 'Users',          icon: '👥', group: 'MAIN' },
-    { id: 'transactions', label: 'Transactions',   icon: '💳', group: 'MAIN' },
-    { id: 'analytics',   label: 'Analytics',      icon: '📈', group: 'REPORTS' },
-    { id: 'settings',    label: 'Settings',       icon: '⚙️', group: 'SYSTEM' },
+    { id: 'overview', label: 'Overview', icon: '📊', group: 'MAIN' },
+    { id: 'users', label: 'Users', icon: '👥', group: 'MAIN' },
+    { id: 'transactions', label: 'Transactions', icon: '💳', group: 'MAIN' },
+    { id: 'analytics', label: 'Analytics', icon: '📈', group: 'REPORTS' },
+    { id: 'settings', label: 'Settings', icon: '⚙️', group: 'SYSTEM' },
   ];
 
   const groups = ['MAIN', 'REPORTS', 'SYSTEM'];
 
   const renderPage = () => {
     switch (active) {
-      case 'overview':     return <Overview      user={user} adminData={adminData} notify={notify} />;
-      case 'users':        return <Users         user={user} adminData={adminData} notify={notify} />;
-      case 'transactions': return <Transactions  user={user} adminData={adminData} />;
-      case 'analytics':    return <Analytics     user={user} adminData={adminData} />;
-      case 'settings':     return <Settings      user={user} notify={notify} logout={logout} nav={nav} />;
-      default:             return <Overview      user={user} adminData={adminData} notify={notify} />;
+      case 'overview': return <Overview user={user} adminData={adminData} notify={notify} />;
+      case 'users': return <Users user={user} adminData={adminData} notify={notify} />;
+      case 'transactions': return <Transactions user={user} adminData={adminData} />;
+      case 'analytics': return <Analytics user={user} adminData={adminData} />;
+      case 'settings': return <Settings user={user} notify={notify} logout={logout} nav={nav} />;
+      default: return <Overview user={user} adminData={adminData} notify={notify} />;
     }
   };
 
@@ -35,7 +35,7 @@ export function AdminDashboard({ user, nav, logout, notify }) {
     <div className="sidebar sidebar-admin">
       {/* Logo */}
       <div className="sidebar-logo">
-        <div className="sidebar-logo-dot" style={{ background: '#e8c547' }} />
+        <div className="sidebar-logo-dot" style={{ background: 'var(--gb)' }} />
         <span className="sidebar-logo-mark">mindGigs</span>
         <span className="sidebar-role-badge role-admin">Admin</span>
       </div>
@@ -67,7 +67,7 @@ export function AdminDashboard({ user, nav, logout, notify }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
           <div style={{
             width: 36, height: 36, borderRadius: '50%',
-            background: 'rgba(232,197,71,0.15)',
+            background: 'rgba(245, 158, 11, 0.15)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1rem', flexShrink: 0,
           }}>🛡️</div>
@@ -98,7 +98,7 @@ export function AdminDashboard({ user, nav, logout, notify }) {
       <div style={{ fontSize: '0.82rem', color: '#666' }}>
         {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
       </div>
-      <div className="topbar-avatar" style={{ background: 'rgba(232,197,71,0.15)', border: '2px solid rgba(232,197,71,0.3)' }}>🛡️</div>
+      <div className="topbar-avatar" style={{ background: 'rgba(245, 158, 11, 0.15)', border: '2px solid rgba(245, 158, 11, 0.3)' }}>🛡️</div>
       <div className="topbar-name">{user.name}</div>
     </div>
   );

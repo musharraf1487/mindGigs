@@ -1,429 +1,460 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Zap,
+  Users,
+  Download,
+  PhoneCall,
+  MessageSquare,
+  TrendingUp,
+  Shield,
+  Clock,
+} from 'lucide-react';
+
+/* ── Animated Particles Canvas Background ── */
+function ParticlesCanvas() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let animId;
+    let width, height;
+
+    const ROYAL_BLUE = '#1D4ED8';
+    const GOLD = '#F59E0B';
+    const PARTICLE_COUNT = 80;
+
+    const particles = [];
+
+    function resize() {
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    }
+
+    function createParticles() {
+      particles.length = 0;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const isGold = Math.random() < 0.1;
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vy: Math.random() * -0.6 - 0.2, // Drifting upwards
+          vx: (Math.random() - 0.5) * 0.3,
+          r: isGold ? Math.random() * 2 + 1.5 : Math.random() * 1.5 + 0.5,
+          gold: isGold,
+          alpha: Math.random() * 0.5 + 0.2,
+          pulse: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.pulse += 0.03;
+
+        // Wrap around
+        if (p.y < -10) {
+          p.y = height + 10;
+          p.x = Math.random() * width;
+        }
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+
+        const pulseAlpha = p.alpha + Math.sin(p.pulse) * 0.2;
+        const boundedAlpha = Math.max(0.1, Math.min(pulseAlpha, 0.8));
+
+        ctx.beginPath();
+        const glow = p.r * 3;
+        const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glow);
+
+        if (p.gold) {
+          grd.addColorStop(0, `rgba(245, 158, 11, ${boundedAlpha})`);
+          grd.addColorStop(1, 'rgba(245, 158, 11, 0)');
+          ctx.fillStyle = grd;
+          ctx.arc(p.x, p.y, glow, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          grd.addColorStop(0, `rgba(245, 245, 244, ${boundedAlpha})`);
+          grd.addColorStop(1, 'rgba(245, 245, 244, 0)');
+          ctx.fillStyle = grd;
+          ctx.arc(p.x, p.y, glow, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.gold ? `rgba(245, 158, 11, ${boundedAlpha + 0.2})` : `rgba(255, 255, 255, ${boundedAlpha})`;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+
+    const ro = new ResizeObserver(() => {
+      resize();
+    });
+    ro.observe(canvas);
+
+    resize();
+    createParticles();
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      ro.disconnect();
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="hero-network-canvas" aria-hidden="true" />;
+}
+
+
+const MONETIZATION_TYPES = [
+  {
+    icon: PhoneCall,
+    title: '1:1 Paid Calls',
+    desc: 'Book 15, 30, or 60-minute sessions with calendar integration and automatic payment collection.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Recurring Communities',
+    desc: 'Charge monthly access to your private WhatsApp group. Auto-renew via Stripe, cancel anytime.',
+  },
+  {
+    icon: Download,
+    title: 'Digital Downloads',
+    desc: 'Sell PDFs, templates, courses, and files securely via AWS S3 with expiring download links.',
+  },
+  {
+    icon: Users,
+    title: 'Advisory Sessions',
+    desc: 'Offer premium-priced custom advisory packages with tailored deliverables and follow-ups.',
+  },
+];
+
+const STEPS = [
+  {
+    num: '01',
+    icon: '👤',
+    title: 'Create Your Profile',
+    desc: 'Build your public page at mindgigs.com/yourname. Add bio, expertise tags, and social links. Takes 2 minutes.',
+  },
+  {
+    num: '02',
+    icon: '💼',
+    title: 'Set Your Pricing',
+    desc: 'Add 1:1 sessions with calendar sync, monthly subscriptions, or digital downloads. You control pricing — always.',
+  },
+  {
+    num: '03',
+    icon: '📈',
+    title: 'Monetize Your Knowledge',
+    desc: 'Share your link. Stripe handles payments globally. Your affiliate link earns 20% on every expert you refer.',
+  },
+];
+
+const WHO_FOR = [
+  ['💼', 'Consultants'],
+  ['🤖', 'AI Builders'],
+  ['⚖️', 'Lawyers'],
+  ['💻', 'Developers'],
+  ['🎯', 'Coaches'],
+  ['📊', 'Analysts'],
+  ['🎨', 'Designers'],
+  ['📝', 'Writers'],
+  ['🏋️', 'Trainers'],
+  ['🏥', 'Doctors'],
+  ['🎓', 'Educators'],
+  ['📈', 'Traders'],
+];
+
+const PROBLEMS = [
+  {
+    icon: '📩',
+    title: 'Endless DMs',
+    desc: 'Strangers extracting hours of your knowledge through free messages with no compensation.',
+  },
+  {
+    icon: '📞',
+    title: 'Free Strategy Calls',
+    desc: '"Quick calls" that turn into unpaid consulting. Your expertise deserves a price tag.',
+  },
+  {
+    icon: '💸',
+    title: 'No Monetization',
+    desc: 'You have a massive following but no system to convert attention into recurring income.',
+  },
+  {
+    icon: '🔥',
+    title: 'Burnout',
+    desc: 'Giving endlessly without building passive income systems leads to exhaustion and resentment.',
+  },
+];
 
 export function LandingPage({ nav, onLogin }) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
-    <div>
-      {/* NAV */}
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          height: 72,
-          padding: '0 48px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(250,249,245,.9)',
-          backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255,155,81,.1)',
-          boxShadow: '0 1px 12px rgba(37,52,63,.06)',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: 'var(--fu)',
-            fontWeight: 800,
-            fontSize: '1.35rem',
-            color: 'var(--gd)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
-          <span
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              background: 'var(--gl)',
-              display: 'inline-block',
-              animation: 'pd 2s ease-in-out infinite',
-            }}
-          />
-          mindGigs
-        </div>
-        <div style={{ display: 'flex', gap: 32 }}>
-          {['Features', 'Pricing', 'Affiliates'].map((l) => (
-            <a
-              key={l}
-              href="#"
-              style={{
-                fontSize: '.875rem',
-                fontWeight: 500,
-                color: 'var(--sl)',
-                transition: 'color .2s',
-              }}
-              onMouseOver={(e) => (e.target.style.color = 'var(--gb)')}
-              onMouseOut={(e) => (e.target.style.color = 'var(--sl)')}
-            >
-              {l}
-            </a>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button className="btn btn-gh" onClick={onLogin}>
-            Log In
+    <div className="lp-root">
+      {/* ── NAV ── */}
+      <nav className="lp-nav">
+        <div className="lp-nav-inner">
+          <button className="lp-brand" onClick={() => setMenuOpen(false)}>
+            mindGigs
           </button>
-          <button className="btn btn-pr" onClick={() => nav('signup')}>
-            Create Profile →
-          </button>
+
+          <div className="lp-nav-links">
+            {['Features', 'Pricing', 'Affiliates', 'Experts'].map((l) => (
+              <a key={l} href="#" className="lp-nav-link">{l}</a>
+            ))}
+          </div>
+
+          <div className="lp-nav-actions">
+            <button className="lp-btn-login" onClick={onLogin}>Log In</button>
+
+            <button className="lp-btn-cta" onClick={() => nav('signup')}>
+              Start Earning <ArrowRight style={{ width: 16, height: 16 }} />
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="hero-section">
-        <div className="hero-bg" />
-        <div className="hero-grid" />
-
-        <div className="float-card fc-1">
-          <div className="fc-avatar">🧠</div>
-          <div>
-            <div className="fc-sub">New booking</div>
-            <div className="fc-val">1:1 Strategy · $250</div>
-          </div>
-        </div>
-        <div className="float-card fc-2">
-          <div className="fc-chip">Affiliate Earned</div>
-          <div className="fc-big">+$1,240</div>
-          <div className="fc-sub">Lifetime Commission</div>
-        </div>
-        <div className="float-card fc-3">
-          <div className="fc-avatar" style={{ background: 'rgba(191,201,209,.12)' }}>💳</div>
-          <div>
-            <div className="fc-sub">Monthly Recurring</div>
-            <div className="fc-val">$3,840 MRR</div>
-          </div>
+      {/* ── HERO ── */}
+      <section className="lp-hero">
+        {/* Animated particles canvas */}
+        <div className="lp-hero-bg-wrap">
+          <ParticlesCanvas />
+          <div className="lp-hero-overlay" />
         </div>
 
-        <div style={{ position: 'relative', zIndex: 3, maxWidth: 820 }}>
-          <div className="hero-badge">
-            <span className="hero-badge-dot" />
-            Human-as-a-Service Platform
-          </div>
-          <h1 className="hero-title">
-            Your Knowledge Is Worth Money.
-            <br />
-            <em>Start Charging For It.</em>
-          </h1>
-          <p className="hero-sub">
-            Sell 1:1 sessions, recurring subscriptions, and digital products. Earn passively through
-            our two-tier affiliate engine. Your profile. Your income. Your rules.
-          </p>
-          <div className="hero-actions">
-            <button className="btn btn-gr btn-xl" onClick={() => nav('signup')}>
-              🟢 Create Your Profile
-            </button>
-            <button className="btn btn-gh btn-xl" onClick={() => nav('experts')}>
-              Explore Experts →
-            </button>
-          </div>
-          <div className="hero-stats">
-            {[
-              ['20%', 'Lifetime Affiliate Commission'],
-              ['3 Types', 'Revenue Streams'],
-              ['2-Tier', 'Affiliate Network'],
-              ['∞', 'Earning Potential'],
-            ]
-              .map(([n, l]) => (
-                <>
-                  <div className="hstat" key={n}>
-                    <span className="hstat-n">{n}</span>
-                    <span className="hstat-l">{l}</span>
-                  </div>
-                  <div className="hdiv" />
-                </>
-              ))
-              .flat()
-              .slice(0, -1)}
-          </div>
-          <div className="trust-badges">
-            <div className="trust-badge">
-              <span className="trust-badge-icon">🔒</span> Stripe Secure Payments
+        <div className="lp-hero-content">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: 'easeOut' }}
+          >
+            {/* Badge */}
+
+
+            {/* Headline */}
+            <h1 className="lp-hero-title">
+              Monetize Your Expertise.{' '}
+              <br />
+              <span className="lp-hero-accent">On Your Terms.</span>
+            </h1>
+
+            {/* Subtext */}
+            <p className="lp-hero-sub">
+              Turn your audience into a recurring business. Sell 1:1 sessions, digital products, and community access — zero coding required.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="lp-hero-actions">
+              <button className="lp-btn-hero-primary" onClick={() => nav('signup')}>
+                Start Earning
+              </button>
             </div>
-            <div className="trust-badge">
-              <span className="trust-badge-icon">🌍</span> Global Payouts
-            </div>
-            <div className="trust-badge">
-              <span className="trust-badge-icon">⚡</span> Instant Setup
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* PROBLEM SECTION */}
-      <section className="problem-section">
-        <div className="container">
-          <div className="slabel slabel-lt">The Problem</div>
-          <h2 className="stitle stitle-lt">Stop Giving Advice For Free</h2>
-          <p className="ssub ssub-lt">Every day, experts like you are leaking value with no return.</p>
-          <div className="problem-cards">
-            {[
-              {
-                icon: '📩',
-                title: 'Endless DMs',
-                desc: 'Strangers extracting hours of your knowledge through free messages with no compensation.',
-              },
-              {
-                icon: '📞',
-                title: 'Free Strategy Calls',
-                desc: '"Quick calls" that turn into unpaid consulting. Your expertise deserves a price tag.',
-              },
-              {
-                icon: '💸',
-                title: 'No Monetization',
-                desc: 'You have a massive following but no system to convert attention into recurring income.',
-              },
-              {
-                icon: '🔥',
-                title: 'Burnout',
-                desc: 'Giving endlessly without building passive income systems leads to exhaustion and resentment.',
-              },
-            ].map((p) => (
-              <div key={p.title} className="prob-card">
-                <div className="prob-icon">{p.icon}</div>
-                <div className="prob-title">{p.title}</div>
-                <div className="prob-desc">{p.desc}</div>
-              </div>
+      {/* ── PROBLEM SECTION ── */}
+      <section className="lp-section lp-section-dark">
+        <div className="lp-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="lp-section-header"
+          >
+            <div className="lp-label lp-label-lt">The Problem</div>
+            <h2 className="lp-section-title lp-section-title-lt">Stop Giving Advice For Free</h2>
+            <p className="lp-section-sub lp-section-sub-lt">Every day, experts like you are leaking value with no return.</p>
+          </motion.div>
+          <div className="lp-problem-grid">
+            {PROBLEMS.map((p, i) => (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="lp-problem-card"
+              >
+                <div className="lp-problem-icon">{p.icon}</div>
+                <h3 className="lp-problem-title">{p.title}</h3>
+                <p className="lp-problem-desc">{p.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="how-section">
-        <div className="container">
-          <div className="slabel">How It Works</div>
-          <h2 className="stitle">Three Steps to Recurring Revenue</h2>
-          <p className="ssub">From signup to earning in under 5 minutes. No technical skills needed.</p>
-          <div className="how-cards">
-            {[
-              {
-                n: '01',
-                icon: '👤',
-                title: 'Create Your Profile',
-                desc: 'Build your public page at mindgigs.com/yourname. Add bio, expertise tags, and social links. Takes 2 minutes.',
-              },
-              {
-                n: '02',
-                icon: '💼',
-                title: 'Set Your Pricing',
-                desc: 'Add 1:1 sessions with calendar sync, monthly subscriptions, or digital downloads. You control pricing — always.',
-              },
-              {
-                n: '03',
-                icon: '📈',
-                title: 'Monetize Your Knowledge',
-                desc: 'Share your link. Stripe handles payments globally. Your affiliate link earns 20% on every expert you refer.',
-              },
-            ].map((s) => (
-              <div key={s.n} className="how-card">
-                <div className="how-step-num">Step {s.n}</div>
-                <div className="how-icon">{s.icon}</div>
-                <div className="how-title">{s.title}</div>
-                <div className="how-desc">{s.desc}</div>
-              </div>
+      {/* ── HOW IT WORKS ── */}
+      <section className="lp-section lp-section-white">
+        <div className="lp-blob lp-blob-tl" />
+        <div className="lp-blob lp-blob-br" />
+        <div className="lp-container lp-rel">
+          <motion.div
+            initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
+            whileInView={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="lp-section-header"
+          >
+            <div className="lp-label">How It Works</div>
+            <h2 className="lp-section-title">Three Steps to Recurring Revenue</h2>
+            <p className="lp-section-sub">From signup to earning in under 5 minutes. No technical skills needed.</p>
+          </motion.div>
+          <div className="lp-steps-grid">
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={s.num}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                whileHover={{ y: -20, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="lp-step-card"
+              >
+                <div className="lp-step-num">{s.num}</div>
+                <div className="lp-step-icon">{s.icon}</div>
+                <h3 className="lp-step-title">{s.title}</h3>
+                <p className="lp-step-desc">{s.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* MONETIZATION TYPES */}
-      <section className="mono-section">
-        <div className="container">
-          <div className="slabel">Monetization Types</div>
-          <h2 className="stitle">Four Ways to Earn</h2>
-          <div className="mono-grid">
-            {[
-              {
-                icon: '🗓️',
-                title: '1:1 Paid Calls',
-                desc: 'Book 15, 30, or 60-minute sessions with calendar integration and automatic payment collection.',
-              },
-              {
-                icon: '💬',
-                title: 'Recurring WhatsApp Groups',
-                desc: 'Charge monthly access to your private group. Auto-renew via Stripe, cancel anytime.',
-              },
-              {
-                icon: '📦',
-                title: 'Digital Downloads',
-                desc: 'Sell PDFs, templates, courses, and files securely via AWS S3 with expiring download links.',
-              },
-              {
-                icon: '🎯',
-                title: 'Advisory Sessions',
-                desc: 'Offer premium-priced custom advisory packages with tailored deliverables and follow-ups.',
-              },
-            ].map((m) => (
-              <div key={m.title} className="mono-card">
-                <div className="mono-icon">{m.icon}</div>
-                <div className="mono-title">{m.title}</div>
-                <div className="mono-desc">{m.desc}</div>
-              </div>
+      {/* ── MONETIZATION ── */}
+      <section className="lp-section lp-section-white">
+        <div className="lp-blob lp-blob-tr" />
+        <div className="lp-container lp-rel">
+          <motion.div
+            initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
+            whileInView={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="lp-section-header"
+          >
+            <div className="lp-label">Monetization Types</div>
+            <h2 className="lp-section-title">Four Ways to Earn</h2>
+            <p className="lp-section-sub">Multiple revenue streams from a single profile.</p>
+          </motion.div>
+          <div className="lp-mono-grid">
+            {MONETIZATION_TYPES.map((m, i) => (
+              <motion.div
+                key={m.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -12, scale: 1.02 }}
+                className="lp-mono-card"
+              >
+                <div className="lp-mono-icon-wrap">
+                  <m.icon className="lp-mono-icon" />
+                </div>
+                <h3 className="lp-mono-title">{m.title}</h3>
+                <p className="lp-mono-desc">{m.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* AFFILIATE ENGINE */}
-      <section className="aff-section">
-        <div className="container">
-          <div className="aff-layout">
-            <div>
-              <div className="slabel">Affiliate Engine</div>
-              <h2 className="stitle">
-                Earn Even When
-                <br />
-                Others Earn
+      {/* ── AFFILIATE ENGINE (CTA) ── */}
+      <section className="lp-section lp-section-white">
+        <div className="lp-container">
+          <div className="lp-aff-card">
+            {/* Left */}
+            <div className="lp-aff-left">
+              <div className="lp-label lp-label-lt">Affiliate Engine</div>
+              <h2 className="lp-aff-title">
+                Earn Even When<br />Others Earn
               </h2>
-              <p className="ssub" style={{ marginBottom: 32 }}>
+              <p className="lp-aff-sub">
                 Our two-tier commission structure builds compounding passive income. No caps, no expiry.
               </p>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
+              <ul className="lp-aff-list">
                 {[
                   '20% lifetime on every direct referral payment',
                   "5% on your referrals' referrals (Tier 2)",
                   'Unique referral link: mindgigs.com/?ref=you',
                   'Affiliate wallet with payout requests',
                 ].map((b) => (
-                  <li
-                    key={b}
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                      alignItems: 'flex-start',
-                      fontSize: '.875rem',
-                      color: 'var(--sl)',
-                    }}
-                  >
-                    <span style={{ color: 'var(--gb)', fontWeight: 700 }}>✓</span> {b}
+                  <li key={b} className="lp-aff-item">
+                    <CheckCircle2 className="lp-aff-check" />
+                    {b}
                   </li>
                 ))}
               </ul>
-              <button className="btn btn-gr btn-lg" onClick={() => nav('signup')}>
-                Start Earning →
+              <button className="lp-btn-white" onClick={() => nav('signup')}>
+                Start Earning <ArrowRight style={{ width: 20, height: 20 }} />
               </button>
             </div>
-            <div className="aff-diagram">
-              <p
-                style={{
-                  fontFamily: 'var(--fu)',
-                  fontSize: '.68rem',
-                  fontWeight: 700,
-                  letterSpacing: '.1em',
-                  textTransform: 'uppercase',
-                  color: 'var(--mu)',
-                  marginBottom: 20,
-                }}
-              >
-                How commissions flow
-              </p>
-              <div className="aff-flow">
-                <div className="aff-node">
-                  <div className="aff-node-left">
-                    <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: '50%',
-                        background: 'var(--gp)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1rem',
-                        border: '2px solid var(--gb)',
-                      }}
-                    >
-                      🧠
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: '.88rem' }}>You</div>
-                      <div style={{ fontSize: '.7rem', color: 'var(--mu)' }}>Expert & Affiliate</div>
+
+            {/* Right: Commission diagram */}
+            <div className="lp-aff-right">
+              <div className="lp-aff-blob-1" />
+              <div className="lp-aff-blob-2" />
+              <div className="lp-aff-diagram">
+                <div className="lp-aff-diagram-label">How commissions flow</div>
+                <div className="lp-aff-flow">
+                  <div className="lp-aff-node">
+                    <div className="lp-aff-node-info">
+                      <div className="lp-aff-avatar lp-aff-avatar-primary">🧠</div>
+                      <div>
+                        <div className="lp-aff-node-name">You</div>
+                        <div className="lp-aff-node-sub">Expert &amp; Affiliate</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="aff-arrow">↓</div>
-                <div className="aff-node">
-                  <div className="aff-node-left">
-                    <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: '50%',
-                        background: 'rgba(191,201,209,.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1rem',
-                      }}
-                    >
-                      👩‍💻
+                  <div className="lp-aff-arrow">↓</div>
+                  <div className="lp-aff-node">
+                    <div className="lp-aff-node-info">
+                      <div className="lp-aff-avatar">👩‍💻</div>
+                      <div>
+                        <div className="lp-aff-node-name">Sarah (L1)</div>
+                        <div className="lp-aff-node-sub">Earns $1,000/mo</div>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: '.88rem' }}>Sarah (L1)</div>
-                      <div style={{ fontSize: '.7rem', color: 'var(--mu)' }}>Earns $1,000/mo</div>
+                    <div className="lp-aff-comm-right">
+                      <div className="lp-aff-comm">$200</div>
+                      <div className="lp-aff-node-sub">20% to you</div>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div className="aff-comm">$200</div>
-                    <div style={{ fontSize: '.7rem', color: 'var(--mu)' }}>20% to you</div>
-                  </div>
-                </div>
-                <div className="aff-arrow">↓</div>
-                <div className="aff-node aff-node-t2">
-                  <div className="aff-node-left">
-                    <div
-                      style={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: '50%',
-                        background: 'rgba(232,197,71,.12)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '.9rem',
-                      }}
-                    >
-                      👨‍🏫
+                  <div className="lp-aff-arrow">↓</div>
+                  <div className="lp-aff-node lp-aff-node-t2">
+                    <div className="lp-aff-node-info">
+                      <div className="lp-aff-avatar lp-aff-avatar-t2">👨‍🏫</div>
+                      <div>
+                        <div className="lp-aff-node-name" style={{ fontSize: '0.82rem' }}>Ahmed (L2)</div>
+                        <div className="lp-aff-node-sub">Earns $800/mo</div>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: '.82rem' }}>Ahmed (L2)</div>
-                      <div style={{ fontSize: '.68rem', color: 'var(--mu)' }}>Earns $800/mo</div>
+                    <div className="lp-aff-comm-right">
+                      <div className="lp-aff-comm" style={{ fontSize: '1rem' }}>$40</div>
+                      <div className="lp-aff-node-sub">5% to you</div>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div className="aff-comm" style={{ fontSize: '1rem' }}>
-                      $40
-                    </div>
-                    <div style={{ fontSize: '.7rem', color: 'var(--mu)' }}>5% to you</div>
+                  <div className="lp-aff-total">
+                    <span className="lp-aff-total-label">Your monthly passive</span>
+                    <span className="lp-aff-total-val">$240<span className="lp-aff-total-period">/mo</span></span>
                   </div>
-                </div>
-                <div className="aff-total">
-                  <span
-                    style={{
-                      fontSize: '.8rem',
-                      color: 'rgba(255,255,255,.6)',
-                      fontFamily: 'var(--fu)',
-                      fontWeight: 600,
-                    }}
-                  >
-                    Your monthly passive
-                  </span>
-                  <span className="aff-total-val">
-                    $240
-                    <span
-                      style={{
-                        fontSize: '.85rem',
-                        fontWeight: 400,
-                        color: 'rgba(255,255,255,.4)',
-                      }}
-                    >
-                      /mo
-                    </span>
-                  </span>
                 </div>
               </div>
             </div>
@@ -431,149 +462,102 @@ export function LandingPage({ nav, onLogin }) {
         </div>
       </section>
 
-      {/* WHO ITS FOR */}
-      <section className="who-section">
-        <div className="container">
-          <div className="slabel slabel-lt">Who It's For</div>
-          <h2 className="stitle stitle-lt">Built For Every Expert</h2>
-          <div className="who-grid">
-            {[
-              ['💼', 'Consultants'],
-              ['🤖', 'AI Builders'],
-              ['⚖️', 'Lawyers'],
-              ['💻', 'Developers'],
-              ['🎯', 'Coaches'],
-              ['📊', 'Analysts'],
-              ['🎨', 'Designers'],
-              ['📝', 'Writers'],
-              ['🏋️', 'Trainers'],
-              ['🏥', 'Doctors'],
-              ['🎓', 'Educators'],
-              ['📈', 'Traders'],
-            ].map(([icon, label]) => (
-              <div key={label} className="who-card">
-                <div className="who-icon">{icon}</div>
-                <div className="who-label">{label}</div>
-              </div>
+      {/* ── WHO IT'S FOR ── */}
+      <section className="lp-section lp-section-dark">
+        <div className="lp-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lp-section-header"
+          >
+            <div className="lp-label lp-label-lt">Who It's For</div>
+            <h2 className="lp-section-title lp-section-title-lt">Built For Every Expert</h2>
+          </motion.div>
+          <div className="lp-who-grid">
+            {WHO_FOR.map(([icon, label], i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -6, scale: 1.05 }}
+                className="lp-who-card"
+              >
+                <div className="lp-who-icon">{icon}</div>
+                <div className="lp-who-label">{label}</div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="final-cta">
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="slabel" style={{ justifyContent: 'center' }}>
-            Start Today
-          </div>
-          <h2
-            style={{
-              fontFamily: 'var(--fd)',
-              fontSize: 'clamp(2.5rem,5vw,4rem)',
-              color: 'var(--gd)',
-              marginBottom: 20,
-              lineHeight: 1.1,
-            }}
+      {/* ── FINAL CTA ── */}
+      <section className="lp-section lp-section-white lp-final-cta">
+        <div className="lp-container lp-rel" style={{ textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            Don't Just Share Knowledge.
-            <br />
-            <em style={{ fontStyle: 'italic', color: 'var(--gb)' }}>Sell It.</em>
-          </h2>
-          <p
-            style={{
-              fontSize: '1.05rem',
-              color: 'var(--sl)',
-              maxWidth: 500,
-              margin: '0 auto 40px',
-              lineHeight: 1.75,
-            }}
-          >
-            Join thousands of knowledge experts monetizing their skills. Free to start, powerful when
-            you scale.
-          </p>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 20 }}>
-            <button className="btn btn-gr btn-xl" onClick={() => nav('signup')}>
-              Create Profile
-            </button>
-            <button className="btn btn-gh btn-lg" onClick={onLogin}>
-              Log In
-            </button>
-          </div>
-          <p
-            style={{
-              fontSize: '.8rem',
-              color: 'var(--mu)',
-              display: 'flex',
-              gap: 12,
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-            }}
-          >
-            <span>✓ No credit card</span>
-            <span>·</span>
-            <span>✓ Live in 5 min</span>
-            <span>·</span>
-            <span>✓ Cancel anytime</span>
-          </p>
+            <div className="lp-label" style={{ justifyContent: 'center' }}>Start Today</div>
+            <h2 className="lp-cta-title">
+              Don't Just Share Knowledge.<br />
+              <span className="lp-hero-accent">Sell It.</span>
+            </h2>
+            <p className="lp-cta-sub">
+              Join thousands of knowledge experts monetizing their skills. Free to start, powerful when you scale.
+            </p>
+            <div className="lp-cta-actions">
+              <button className="lp-btn-primary" onClick={() => nav('signup')}>
+                Create Profile <ArrowRight style={{ width: 20, height: 20 }} />
+              </button>
+              <button className="lp-btn-login" onClick={onLogin}>Log In</button>
+            </div>
+            <p className="lp-cta-trust">
+              <span>✓ No credit card</span>
+              <span>·</span>
+              <span>✓ Live in 5 min</span>
+              <span>·</span>
+              <span>✓ Cancel anytime</span>
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="site-footer">
-        <div className="container">
-          <div className="footer-grid">
-            <div>
-              <div className="footer-brand-logo">
-                <span
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: 'var(--gl)',
-                    display: 'inline-block',
-                  }}
-                />
-                mindGigs
-              </div>
-              <p
-                style={{
-                  fontSize: '.85rem',
-                  color: 'rgba(255,255,255,.45)',
-                  lineHeight: 1.72,
-                  maxWidth: 260,
-                  marginBottom: 20,
-                }}
-              >
-                The monetization infrastructure for knowledge experts who are serious about recurring
-                income.
+      {/* ── FOOTER ── */}
+      <footer className="lb-footer">
+        <div className="lb-footer-overlay" />
+        <div className="lb-container lb-rel">
+          <div className="lb-footer-grid">
+            <div className="lb-footer-brand">
+              <div className="lb-footer-logo">mindGigs</div>
+              <p className="lb-footer-tagline">
+                The monetization infrastructure for knowledge experts who are serious about recurring income.
               </p>
             </div>
             {[
-              [
-                'Platform',
-                ['Expert Profiles', 'Session Booking', 'Subscriptions', 'Digital Products', 'Affiliate Engine'],
-              ],
+              ['Platform', ['Expert Profiles', 'Session Booking', 'Subscriptions', 'Digital Products', 'Affiliate Engine']],
               ['Company', ['About', 'Blog', 'Careers', 'Press', 'Partners']],
               ['Support', ['Help Center', 'API Docs', 'Community', 'Status', 'Contact']],
             ].map(([h, links]) => (
-              <div key={h} className="footer-link-group">
-                <h4>{h}</h4>
-                {links.map((l) => (
-                  <a key={l} href="#" className="footer-link">
-                    {l}
-                  </a>
-                ))}
+              <div key={h}>
+                <h4 className="lb-footer-heading">{h}</h4>
+                <ul className="lb-footer-links">
+                  {links.map((l) => (
+                    <li key={l}><a href="#">{l}</a></li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-          <div className="footer-bottom">
-            <span>© 2025 mindGigs.com · All rights reserved.</span>
-            <div className="footer-legal">
-              {['Privacy Policy', 'Terms', 'Cookies'].map((l) => (
-                <a key={l} href="#">
-                  {l}
-                </a>
-              ))}
+          <div className="lb-footer-bottom">
+            <div className="lb-footer-copy">© 2026 mindGigs. Humans as a Service. All rights reserved.</div>
+            <div className="lb-footer-socials">
+              <div className="lb-social-dot" />
+              <div className="lb-social-dot" />
+              <div className="lb-social-dot" />
             </div>
           </div>
         </div>

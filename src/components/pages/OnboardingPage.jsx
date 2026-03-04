@@ -4,6 +4,7 @@ import { db, storage } from '../../config/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+
 export function OnboardingPage({ nav, notify, addExpert }) {
   const [step, setStep] = useState(0);
   const [offerTab, setOfferTab] = useState(0);
@@ -55,10 +56,11 @@ export function OnboardingPage({ nav, notify, addExpert }) {
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <span
             style={{
-              fontFamily: 'var(--fu)',
-              fontWeight: 800,
+              fontFamily: 'var(--fb)',
+              fontWeight: 700,
               fontSize: '1.3rem',
-              color: 'var(--gd)',
+              color: 'var(--gb)',
+              letterSpacing: '-0.04em',
             }}
           >
             mindGigs

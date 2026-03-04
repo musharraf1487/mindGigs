@@ -23,7 +23,7 @@ export function Referrals({ user, affiliateData, notify }) {
       {/* Stats Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
-          { label: 'Total Referred', val: total, color: 'var(--teal)', icon: '👥' },
+          { label: 'Total Referred', val: total, color: 'var(--gb)', icon: '👥' },
           { label: 'Active', val: active, color: 'var(--gl)', icon: '✅' },
           { label: 'Pending Approval', val: pending, color: 'var(--gold)', icon: '⏳' },
           { label: 'Total Earned', val: `$${totalEarned}`, color: 'var(--purp)', icon: '💰' },
@@ -48,7 +48,7 @@ export function Referrals({ user, affiliateData, notify }) {
           <button
             onClick={() => notify?.('Invite copied to clipboard!', 'success')}
             style={{
-              padding: '7px 14px', background: 'var(--teal)', color: '#fff',
+              padding: '7px 14px', background: 'var(--gb)', color: '#fff',
               borderRadius: '6px', fontFamily: 'var(--fu)', fontWeight: 600,
               fontSize: '0.78rem', cursor: 'pointer',
             }}
@@ -108,7 +108,7 @@ export function Referrals({ user, affiliateData, notify }) {
         background: 'rgba(191,201,209,0.06)', borderRadius: '10px',
         border: '1.5px solid rgba(191,201,209,0.12)', fontSize: '0.82rem', color: 'var(--sl)',
       }}>
-        <strong style={{ color: 'var(--teal)' }}>💡 Tip:</strong> Share your affiliate link to earn 20% on their first year + 10% recurring commission.
+        <strong style={{ color: 'var(--gb)' }}>💡 Tip:</strong> Share your affiliate link to earn 20% on their first year + 10% recurring commission.
       </div>
     </div>
   );

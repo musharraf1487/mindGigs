@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 
+
 const CATEGORIES = ['All', 'AI', 'Development', 'Marketing', 'Legal', 'Design', 'Business'];
 
 function ExpertCard({ expert, nav }) {
@@ -152,33 +153,29 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(37,52,63,0.06)',
+                    borderBottom: '1px solid rgba(84,119,146,0.1)',
+                    background: 'rgba(255,255,255,0.9)',
+                    backdropFilter: 'blur(10px)',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 50,
                 }}
             >
-                <span
-                    style={{
-                        fontFamily: 'var(--fu)',
-                        fontWeight: 800,
-                        fontSize: '1.2rem',
-                        color: 'var(--gd)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                    }}
-                    onClick={() => nav('home')}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     <span
                         style={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: '50%',
-                            background: 'var(--gb)',
-                            display: 'inline-block',
+                            fontFamily: 'var(--fb)',
+                            fontWeight: 700,
+                            fontSize: '1.2rem',
+                            color: 'var(--gb)',
+                            cursor: 'pointer',
+                            letterSpacing: '-0.04em',
                         }}
-                    />
-                    mindGigs
-                </span>
+                        onClick={() => nav('landingboard')}
+                    >
+                        mindGigs
+                    </span>
+                </div>
 
                 <div style={{ display: 'flex', gap: 10 }}>
                     <button className="btn btn-gh btn-sm" onClick={onLogin}>

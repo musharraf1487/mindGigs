@@ -6,11 +6,12 @@ function AuthShell({ children, nav }) {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--gmt)',
+        background: 'var(--cr)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 24,
+        position: 'relative',
       }}
     >
       <div
@@ -18,21 +19,22 @@ function AuthShell({ children, nav }) {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 60% 60% at 50% 0%,rgba(255,178,122,.12) 0%,transparent 70%)',
+            'radial-gradient(ellipse 60% 60% at 50% 0%, rgba(84,119,146,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
       <div style={{ width: '100%', maxWidth: 480, position: 'relative', zIndex: 1 }}>
         <div
           style={{ textAlign: 'center', marginBottom: 32, cursor: 'pointer' }}
-          onClick={() => nav('home')}
+          onClick={() => nav('landingboard')}
         >
           <span
             style={{
-              fontFamily: 'var(--fu)',
+              fontFamily: 'var(--fb)',
               fontWeight: 800,
               fontSize: '1.4rem',
-              color: 'var(--gd)',
+              color: 'var(--wh)',
+              letterSpacing: '-0.04em',
             }}
           >
             mindGigs

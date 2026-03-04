@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export function PublicProfile({ nav, notify, expert }) {
   if (!expert) return null;
   return (
@@ -8,26 +9,33 @@ export function PublicProfile({ nav, notify, expert }) {
       <div
         style={{
           background: '#fff',
-          borderBottom: '1px solid rgba(255,155,81,.1)',
+          borderBottom: '1px solid rgba(84,119,146,0.1)',
           padding: '0 48px',
           height: 64,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--fu)',
-            fontWeight: 800,
-            fontSize: '1.2rem',
-            color: 'var(--gd)',
-            cursor: 'pointer',
-          }}
-          onClick={() => nav('home')}
-        >
-          mindGigs
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span
+            style={{
+              fontFamily: 'var(--fb)',
+              fontWeight: 700,
+              fontSize: '1.1rem',
+              color: 'var(--gb)',
+              cursor: 'pointer',
+              letterSpacing: '-0.04em',
+              paddingLeft: 4,
+            }}
+            onClick={() => nav('landingboard')}
+          >
+            mindGigs
+          </span>
+        </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn btn-gh btn-sm" onClick={() => notify('Profile link copied!')}>
             📤 Share

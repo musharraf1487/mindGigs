@@ -61,7 +61,7 @@ export function Settings({ user, notify, logout, nav }) {
           <button
             onClick={() => notify?.('Account saved!', 'success')}
             style={{
-              marginTop: '18px', padding: '9px 20px', background: 'var(--teal)', color: '#fff',
+              marginTop: '18px', padding: '9px 20px', background: 'var(--gb)', color: '#fff',
               borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer',
             }}
           >Save Changes</button>
@@ -84,13 +84,13 @@ export function Settings({ user, notify, logout, nav }) {
             <label style={labelStyle}>Account / Email</label>
             <input type="text" placeholder="zaid@paypal.com or ••••••1234" style={inputStyle} />
           </div>
-          <div style={{ padding: '10px 14px', background: 'rgba(191,201,209,0.06)', borderRadius: '8px', border: '1px solid rgba(191,201,209,0.12)', fontSize: '0.78rem', color: 'var(--teal)', marginBottom: '4px' }}>
+          <div style={{ padding: '10px 14px', background: 'rgba(191,201,209,0.06)', borderRadius: '8px', border: '1px solid rgba(191,201,209,0.12)', fontSize: '0.78rem', color: 'var(--gb)', marginBottom: '4px' }}>
             ✅ Min. payout: <strong>$50</strong> · Processed every 2 weeks on Fridays
           </div>
           <button
             onClick={() => notify?.('Payout method saved!', 'success')}
             style={{
-              marginTop: '14px', padding: '9px 20px', background: 'var(--teal)', color: '#fff',
+              marginTop: '14px', padding: '9px 20px', background: 'var(--gb)', color: '#fff',
               borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer',
             }}
           >Save Payout Info</button>
@@ -114,7 +114,7 @@ export function Settings({ user, notify, logout, nav }) {
                 onClick={() => toggleNotif(name)}
                 style={{
                   width: 38, height: 22, borderRadius: '100px', cursor: 'pointer',
-                  background: on ? 'var(--teal)' : '#d4d4d4', position: 'relative', transition: 'background 0.25s',
+                  background: on ? 'var(--gb)' : '#d4d4d4', position: 'relative', transition: 'background 0.25s',
                 }}
               >
                 <div style={{

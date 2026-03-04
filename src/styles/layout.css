@@ -6,7 +6,7 @@
 
 .sidebar {
   width: 260px;
-  background: var(--gd);
+  background: var(--cr);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -19,11 +19,11 @@
 }
 
 .sidebar-admin {
-  background: #1a1d1f;
+  background: var(--card-bg);
 }
 
 .sidebar-aff {
-  background: #0d2040;
+  background: var(--cr);
 }
 
 .sidebar-logo {
@@ -38,7 +38,7 @@
   font-family: var(--fu);
   font-size: 1.25rem;
   font-weight: 800;
-  color: #fff;
+  color: white;
   letter-spacing: -0.02em;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .role-expert {
-  background: rgba(255,178,122, 0.15);
+  background: rgba(255, 178, 122, 0.15);
   color: var(--gl);
 }
 
@@ -71,7 +71,7 @@
 }
 
 .role-aff {
-  background: rgba(191,201,209, 0.15);
+  background: rgba(191, 201, 209, 0.15);
   color: var(--teal);
 }
 
@@ -100,7 +100,7 @@
   transition: all 0.2s;
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--mu);
   margin-bottom: 2px;
   border: none;
   background: none;
@@ -110,23 +110,23 @@
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--gb);
 }
 
 .nav-item.active {
-  background: rgba(255,178,122, 0.12);
-  color: var(--gl);
+  background: #303a4b;
+  color: var(--gb);
   font-weight: 600;
 }
 
 .nav-item-admin.active {
-  background: rgba(232, 197, 71, 0.1);
-  color: var(--gold);
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--gb);
 }
 
 .nav-item-aff.active {
-  background: rgba(191,201,209, 0.1);
-  color: var(--teal);
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--gb);
 }
 
 .nav-icon {
@@ -145,16 +145,16 @@
   margin-left: 260px;
   flex: 1;
   min-height: 100vh;
-  background: #f5f7f5;
+  background: var(--cr);
 }
 
 .dash-main-dark {
-  background: #111;
+  background: var(--cr);
 }
 
 .dash-topbar {
-  background: #fff;
-  border-bottom: 1px solid rgba(255,155,81, 0.08);
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
   padding: 0 32px;
   height: 64px;
   display: flex;
@@ -163,23 +163,23 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  box-shadow: 0 1px 8px rgba(37,52,63, 0.04);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dash-topbar-title {
   font-family: var(--fu);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--gd);
+  color: var(--wh);
 }
 
 .dash-topbar-dark {
-  background: #1a1d1f;
+  background: var(--card-bg);
   border-color: rgba(255, 255, 255, 0.07);
 }
 
 .dash-topbar-dark .dash-topbar-title {
-  color: #fff;
+  color: var(--wh);
 }
 
 .dash-content {
@@ -201,7 +201,7 @@
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  border: 2px solid rgba(255,155,81, 0.2);
+  border: 2px solid rgba(255, 155, 81, 0.2);
 }
 
 .topbar-name {

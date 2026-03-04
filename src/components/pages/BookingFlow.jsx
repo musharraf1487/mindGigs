@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 export function BookingFlow({ nav, notify }) {
   const [step, setStep] = useState(0);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -141,9 +142,8 @@ export function BookingFlow({ nav, notify }) {
               {days.map((d) => (
                 <button
                   key={d}
-                  className={`cal-day ${d < 19 ? 'cal-past' : available.includes(d) ? 'available' : ''} ${
-                    selectedDay === d ? 'selected' : ''
-                  }`}
+                  className={`cal-day ${d < 19 ? 'cal-past' : available.includes(d) ? 'available' : ''} ${selectedDay === d ? 'selected' : ''
+                    }`}
                   onClick={() => available.includes(d) && d >= 19 && setSelectedDay(d)}
                 >
                   {d}

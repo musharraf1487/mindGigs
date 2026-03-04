@@ -3,7 +3,7 @@
  * "Join as an Expert" navigates to LandingPage (home)
  */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     Check,
     PhoneCall,
@@ -37,6 +37,119 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-coverflow';
+
+/* ── Animated Network Canvas Background ── */
+function NetworkCanvas() {
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        let animId;
+        let width, height;
+        const NODE_COUNT = 55;
+        const CONNECTION_DIST = 170;
+        const nodes = [];
+
+        function resize() {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+        }
+
+        function createNodes() {
+            nodes.length = 0;
+            for (let i = 0; i < NODE_COUNT; i++) {
+                const isGold = Math.random() < 0.07;
+                nodes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.28,
+                    vy: (Math.random() - 0.5) * 0.28,
+                    r: isGold ? 3.2 : Math.random() * 1.8 + 1.2,
+                    gold: isGold,
+                    pulse: Math.random() * Math.PI * 2,
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < nodes.length; i++) {
+                const a = nodes[i];
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const b = nodes[j];
+                    const dx = a.x - b.x;
+                    const dy = a.y - b.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < CONNECTION_DIST) {
+                        const alpha = (1 - dist / CONNECTION_DIST) * 0.45;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.strokeStyle = `rgba(245, 245, 244, ${alpha})`;
+                        ctx.lineWidth = 0.7;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            for (const node of nodes) {
+                node.x += node.vx;
+                node.y += node.vy;
+                node.pulse += 0.025;
+                if (node.x < 0 || node.x > width) node.vx *= -1;
+                if (node.y < 0 || node.y > height) node.vy *= -1;
+
+                const pulseR = node.r + Math.sin(node.pulse) * 0.5;
+
+                if (node.gold) {
+                    const grd = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, pulseR * 4);
+                    grd.addColorStop(0, 'rgba(245, 158, 11, 0.55)');
+                    grd.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, pulseR * 4, 0, Math.PI * 2);
+                    ctx.fillStyle = grd;
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, pulseR, 0, Math.PI * 2);
+                    ctx.fillStyle = '#F59E0B';
+                    ctx.fill();
+                } else {
+                    const grd = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, pulseR * 3.5);
+                    grd.addColorStop(0, 'rgba(245, 245, 244, 0.5)');
+                    grd.addColorStop(1, 'rgba(245, 245, 244, 0)');
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, pulseR * 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = grd;
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, pulseR, 0, Math.PI * 2);
+                    ctx.fillStyle = '#F5F5F4';
+                    ctx.globalAlpha = 0.85;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            animId = requestAnimationFrame(draw);
+        }
+
+        const ro = new ResizeObserver(resize);
+        ro.observe(canvas);
+        resize();
+        createNodes();
+        draw();
+
+        return () => {
+            cancelAnimationFrame(animId);
+            ro.disconnect();
+        };
+    }, []);
+
+    return <canvas ref={canvasRef} className="lb-hero-canvas" aria-hidden="true" />;
+}
 
 const EXPERTS = [
     {
@@ -304,43 +417,49 @@ export function LandingBoard({ nav, onLogin }) {
             {/* Hero Section */}
             <section className="lb-hero">
                 <div className="lb-hero-bg-wrap">
-                    <img
-                        src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop"
-                        alt="Engaging Group Strategic Session"
-                        className="lb-hero-img"
-                        referrerPolicy="no-referrer"
-                    />
+                    <NetworkCanvas />
                     <div className="lb-hero-overlay" />
                 </div>
 
                 <div className="lb-hero-content">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 24 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.85, ease: 'easeOut' }}
                     >
+                        {/* Badge */}
+
+
                         <h1 className="lb-hero-title">
-                            Access Proven Expertise. <br />
-                            <span className="lb-hero-accent">On Demand.</span>
+                            Hire Proven Experts.{' '}
+                            <br />
+                            Get{' '}
+                            <span className="lb-hero-accent">Real Results.</span>
                         </h1>
+
                         <p className="lb-hero-sub">
-                            Connect with experienced professionals for private consultations, structured advisory, expert-led communities, and premium digital resources.
+                            Private consultations, structured advisory, and premium knowledge —
+                            built for serious growth.
                         </p>
-                        <div className="lb-hero-badges">
-                            <span className="lb-hero-badge"><CheckCircle2 className="lb-badge-icon" /> Proven Expertise</span>
-                            <span className="lb-hero-badge"><CheckCircle2 className="lb-badge-icon" /> Strategic Insight</span>
-                            <span className="lb-hero-badge"><CheckCircle2 className="lb-badge-icon" /> Measurable Impact</span>
-                        </div>
+
+                        {/* CTA Buttons */}
                         <div className="lb-hero-cta">
-                            <button className="lb-btn-primary" onClick={() => nav('experts')}>
-                                Browse Experts <ArrowRight className="lb-btn-icon" />
+                            <button className="lb-btn-hire" onClick={() => nav('experts')}>
+                                Hire an Expert
+                            </button>
+                            <button className="lb-btn-become" onClick={handleJoinAsExpert}>
+                                Become an Expert
                             </button>
                         </div>
+
+                        {/* Trust Line */}
+                        <p className="lb-hero-trust-line">
+                            Trusted by founders, startups, and growing businesses.
+                        </p>
                     </motion.div>
                 </div>
-
-                <div className="lb-hero-blur-bottom" />
             </section>
+
 
             {/* How It Works */}
             <section id="lb-how" className="lb-section lb-section-white lb-how">

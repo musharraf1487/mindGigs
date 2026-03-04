@@ -23,14 +23,14 @@ export function Campaigns({ user, affiliateData, notify }) {
         </div>
         <button
           onClick={() => { setShowNew(true); notify?.('Campaign creation opened', 'success'); }}
-          style={{ padding: '9px 18px', background: 'var(--teal)', color: '#fff', borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
+          style={{ padding: '9px 18px', background: 'var(--gb)', color: '#fff', borderRadius: '8px', fontFamily: 'var(--fu)', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
         >+ New Campaign</button>
       </div>
 
       {/* Summary Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
-          { label: 'Total Clicks', val: totalClicks, color: 'var(--teal)', icon: '👆' },
+          { label: 'Total Clicks', val: totalClicks, color: 'var(--gb)', icon: '👆' },
           { label: 'Total Conversions', val: totalConversions, color: 'var(--gl)', icon: '✅' },
           { label: 'Avg ROI', val: `${avgRoi}%`, color: 'var(--gold)', icon: '📈' },
         ].map((s, i) => (
@@ -80,7 +80,7 @@ export function Campaigns({ user, affiliateData, notify }) {
                         {c.status === 'active' ? '●' : '⏸'} {c.status}
                       </span>
                     </td>
-                    <td style={{ fontWeight: 600, color: 'var(--teal)' }}>{c.clicks.toLocaleString()}</td>
+                    <td style={{ fontWeight: 600, color: 'var(--gb)' }}>{c.clicks.toLocaleString()}</td>
                     <td style={{ fontWeight: 600, color: 'var(--gl)' }}>{c.conversions}</td>
                     <td style={{ color: 'var(--sl)' }}>{convRate}</td>
                     <td>

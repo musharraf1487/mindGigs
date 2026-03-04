@@ -641,11 +641,11 @@ export function ClientDashboard({ user, nav, logout, notify }) {
                                 cursor: 'pointer',
                                 background:
                                     section === item.key
-                                        ? 'rgba(255,178,122,0.12)'
+                                        ? 'rgba(245, 158, 11, 0.12)'
                                         : 'transparent',
                                 borderLeft:
                                     section === item.key
-                                        ? '3px solid var(--gl)'
+                                        ? '3px solid var(--gb)'
                                         : '3px solid transparent',
                                 transition: 'all 0.18s',
                                 fontSize: '.85rem',

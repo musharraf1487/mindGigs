@@ -154,26 +154,36 @@ function NetworkCanvas() {
 const EXPERTS = [
     {
         id: 1,
-        name: "Sarah Chen",
-        role: "Ex-Google Product Lead",
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&h=400&auto=format&fit=crop",
-        expertise: ["Product Strategy", "Scaling Teams", "B2B SaaS"],
+        name: "Amir Anzur",
+        role: "CMO - PSEB",
+        image: "/images/amiranzur.png",
+        expertise: ["Strategist", "Teacher", "Author"],
         price: "$250/30min",
         rating: 4.9,
         reviews: 124
     },
     {
         id: 2,
-        name: "Marcus Thorne",
-        role: "Serial Founder & Exit Expert",
-        image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=400&auto=format&fit=crop",
-        expertise: ["Fundraising", "M&A", "Startup Operations"],
+        name: "Moe Mhanna",
+        role: "Experienced CPA with MBA in Business Administration and Accounting",
+        image: "/images/moemohana.png",
+        expertise: ["Strategic Consultant", "Author", "Auditor"],
         price: "$400/30min",
         rating: 5.0,
         reviews: 89
     },
     {
         id: 3,
+        name: "Chris Tibbetts",
+        role: "Serial Entrepreneur & Business Growth Expert",
+        image: "/images/Chris-Tibbetts.png",
+        expertise: ["Entrepreneurship", "Growth Strategy", "Leadership"],
+        price: "$350/30min",
+        rating: 4.9,
+        reviews: 97
+    },
+    {
+        id: 4,
         name: "Elena Rodriguez",
         role: "Growth Marketing Director",
         image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&h=400&auto=format&fit=crop",
@@ -183,7 +193,7 @@ const EXPERTS = [
         reviews: 215
     },
     {
-        id: 4,
+        id: 5,
         name: "David Park",
         role: "Venture Capital Partner",
         image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&h=400&auto=format&fit=crop",

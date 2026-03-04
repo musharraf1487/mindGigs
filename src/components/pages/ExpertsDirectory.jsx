@@ -6,76 +6,86 @@ const CATEGORIES = ['All', 'AI', 'Development', 'Marketing', 'Legal', 'Design', 
 function ExpertCard({ expert, nav }) {
     return (
         <div
-            className="card"
             style={{
+                background: '#547792',
+                border: '1px solid rgba(245, 245, 244, 0.1)',
+                borderRadius: '40px',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-                cursor: 'default',
-                border: '1px solid rgba(37,52,63,0.08)',
+                transition: 'transform 0.3s, box-shadow 0.5s, border-color 0.3s',
+                cursor: 'pointer',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.05)',
             }}
             onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = 'var(--sc)';
+                e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 40px 80px rgba(245, 158, 11, 0.2)';
+                e.currentTarget.style.borderColor = '#F59E0B';
             }}
             onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.05)';
+                e.currentTarget.style.borderColor = 'rgba(245, 245, 244, 0.1)';
             }}
         >
             {/* Top Image */}
-            <img
-                src={expert.image}
-                alt={expert.name}
-                style={{
-                    width: '100%',
-                    height: 220,
-                    objectFit: 'cover',
-                    borderBottom: '1px solid rgba(37,52,63,0.05)',
-                }}
-            />
+            <div style={{ aspectRatio: '1', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+                <img
+                    src={expert.image}
+                    alt={expert.name}
+                    referrerPolicy="no-referrer"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                    }}
+                />
+            </div>
 
             {/* Card Body */}
-            <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <div
-                    style={{
-                        fontFamily: 'var(--fu)',
-                        fontWeight: 800,
-                        fontSize: '1.1rem',
-                        color: 'var(--gd)',
-                        marginBottom: 8,
-                    }}
-                >
-                    {expert.name}
+            <div style={{ padding: '32px', flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative', zIndex: 10 }}>
+                <div>
+                    <div
+                        style={{
+                            fontFamily: 'var(--fb)',
+                            fontWeight: 700,
+                            fontSize: '1.4rem',
+                            color: 'white',
+                            marginBottom: 4,
+                        }}
+                    >
+                        {expert.name}
+                    </div>
+                    <p
+                        style={{
+                            fontSize: '.85rem',
+                            color: 'rgba(255,255,255,0.6)',
+                            lineHeight: 1.6,
+                            fontWeight: 500,
+                            marginTop: 4,
+                        }}
+                    >
+                        {expert.bio || expert.role || ''}
+                    </p>
                 </div>
 
-                <p
-                    style={{
-                        fontSize: '.88rem',
-                        color: 'var(--sl)',
-                        lineHeight: 1.6,
-                        marginBottom: 16,
-                        flex: 1, // Push tags and button to bottom
-                    }}
-                >
-                    {expert.bio}
-                </p>
-
                 {/* Tags */}
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
-                    {expert.tags.slice(0, 3).map((t) => (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {(expert.tags || []).slice(0, 3).map((t) => (
                         <span
                             key={t}
                             style={{
-                                fontSize: '.72rem',
-                                fontFamily: 'var(--fu)',
-                                fontWeight: 600,
-                                color: 'var(--gm)',
-                                background: 'var(--gmt)',
-                                padding: '4px 10px',
-                                borderRadius: '4px',
+                                fontSize: '.625rem',
+                                fontFamily: 'var(--fb)',
+                                fontWeight: 900,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.1em',
+                                padding: '6px 12px',
+                                background: 'rgba(245, 245, 244, 0.1)',
+                                color: 'rgba(245, 245, 244, 0.7)',
+                                border: '1px solid rgba(245, 245, 244, 0.1)',
+                                borderRadius: '8px',
                             }}
                         >
                             {t}
@@ -83,23 +93,37 @@ function ExpertCard({ expert, nav }) {
                     ))}
                 </div>
 
-                {/* Button */}
-                <button
-                    className="btn"
-                    style={{
-                        width: '100%',
-                        background: 'var(--gm)',
-                        color: '#fff',
-                        borderRadius: '6px',
-                        padding: '12px 0',
-                        fontFamily: 'var(--fu)',
-                        fontWeight: 700,
-                        fontSize: '.9rem',
-                    }}
-                    onClick={() => nav('public-profile', { expertId: expert.id })}
-                >
-                    View Profile
-                </button>
+                {/* Footer */}
+                <div style={{ paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto' }}>
+                    <button
+                        style={{
+                            width: '100%',
+                            background: '#213448',
+                            color: 'white',
+                            padding: '16px',
+                            borderRadius: '16px',
+                            fontWeight: 700,
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '0.95rem',
+                            fontFamily: 'var(--fb)',
+                            transition: 'background 0.3s, box-shadow 0.3s, color 0.3s',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#F59E0B';
+                            e.currentTarget.style.color = '#0F172A';
+                            e.currentTarget.style.boxShadow = '0 8px 32px rgba(245,158,11,0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#213448';
+                            e.currentTarget.style.color = 'white';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        onClick={() => nav('public-profile', { expertId: expert.id })}
+                    >
+                        View Profile
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -111,7 +135,6 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
 
     const filtered = useMemo(() => {
         return experts.filter((e) => {
-            // Map mock data categories to the UI categories shown in the image roughly
             const catMapping = {
                 'AI': 'Tech',
                 'Development': 'Tech',
@@ -125,7 +148,6 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                 mappedCat = catMapping[activeCategory];
             }
 
-            // Just check if the expert category matches our UI filter or the mapped equivalent
             const matchCat = activeCategory === 'All' ||
                 e.category === mappedCat ||
                 e.category === activeCategory ||
@@ -144,44 +166,82 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
     }, [search, activeCategory]);
 
     return (
-        <div style={{ background: '#fff', minHeight: '100vh', paddingBottom: 80 }}>
+        <div style={{ background: '#0F172A', minHeight: '100vh', paddingBottom: 80 }}>
             {/* ── NAV ── */}
             <nav
                 style={{
-                    height: 64,
+                    height: 72,
                     padding: '0 48px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(84,119,146,0.1)',
-                    background: 'rgba(255,255,255,0.9)',
-                    backdropFilter: 'blur(10px)',
+                    borderBottom: '1px solid rgba(245,245,244,0.05)',
+                    background: 'rgba(15, 23, 42, 0.85)',
+                    backdropFilter: 'blur(12px)',
                     position: 'sticky',
                     top: 0,
                     zIndex: 50,
                 }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <span
-                        style={{
-                            fontFamily: 'var(--fb)',
-                            fontWeight: 700,
-                            fontSize: '1.2rem',
-                            color: 'var(--gb)',
-                            cursor: 'pointer',
-                            letterSpacing: '-0.04em',
-                        }}
-                        onClick={() => nav('landingboard')}
-                    >
-                        mindGigs
-                    </span>
-                </div>
+                <span
+                    style={{
+                        fontFamily: 'var(--fb)',
+                        fontWeight: 700,
+                        fontSize: '1.45rem',
+                        color: 'white',
+                        cursor: 'pointer',
+                        letterSpacing: '-0.04em',
+                        background: 'none',
+                        border: 'none',
+                    }}
+                    onClick={() => nav('landingboard')}
+                >
+                    mindGigs
+                </span>
 
-                <div style={{ display: 'flex', gap: 10 }}>
-                    <button className="btn btn-gh btn-sm" onClick={onLogin}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <button
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            fontFamily: 'var(--fb)',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                            color: 'rgba(245,245,244,0.75)',
+                            cursor: 'pointer',
+                            padding: '8px 16px',
+                            transition: 'color 0.2s',
+                        }}
+                        onClick={onLogin}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(245,245,244,0.75)'; }}
+                    >
                         Log In
                     </button>
-                    <button className="btn btn-pr btn-sm" style={{ background: 'var(--gm)', color: '#fff' }} onClick={() => nav('signup')}>
+                    <button
+                        style={{
+                            background: '#F59E0B',
+                            color: '#0F172A',
+                            border: 'none',
+                            fontFamily: 'var(--fb)',
+                            fontWeight: 700,
+                            fontSize: '0.875rem',
+                            padding: '10px 24px',
+                            borderRadius: '999px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s, box-shadow 0.2s',
+                            boxShadow: '0 4px 16px rgba(245,158,11,0.3)',
+                        }}
+                        onClick={() => nav('home')}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#d97706';
+                            e.currentTarget.style.boxShadow = '0 8px 24px rgba(245,158,11,0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#F59E0B';
+                            e.currentTarget.style.boxShadow = '0 4px 16px rgba(245,158,11,0.3)';
+                        }}
+                    >
                         Join as Expert
                     </button>
                 </div>
@@ -192,20 +252,20 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                 <h1
                     style={{
                         fontFamily: 'var(--fd)',
-                        // In the image, the title is purple. We will use --gb (orange) or --gd (dark blue) to match the website theme. Let's use var(--gm) to fit the image's dark blue aesthetic or var(--gb) for accent.
-                        color: 'var(--gb)',
+                        color: '#F5F5F4',
                         fontSize: 'clamp(2.4rem, 5vw, 3.5rem)',
                         marginBottom: 16,
                         fontWeight: 800,
                         letterSpacing: '-0.02em',
                     }}
                 >
-                    Explore Experts
+                    Explore{' '}
+                    <span style={{ color: '#F59E0B' }}>Experts</span>
                 </h1>
                 <p
                     style={{
                         fontSize: '1.05rem',
-                        color: 'var(--sl)',
+                        color: '#D1D5DB',
                         marginBottom: 40,
                     }}
                 >
@@ -218,15 +278,15 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                         style={{
                             display: 'flex',
                             alignItems: 'center',
-                            background: 'var(--cr)', // Very light grayish cyan
-                            borderRadius: '8px',
+                            background: '#1E293B',
+                            borderRadius: '12px',
                             padding: '12px 20px',
                             width: '100%',
                             maxWidth: 600,
-                            border: '1px solid rgba(37,52,63,0.05)',
+                            border: '1px solid rgba(245,245,244,0.1)',
                         }}
                     >
-                        <span style={{ color: 'var(--mu)', marginRight: 12, fontSize: '1.1rem' }}>🔍</span>
+                        <span style={{ color: '#9CA3AF', marginRight: 12, fontSize: '1.1rem' }}>🔍</span>
                         <input
                             style={{
                                 border: 'none',
@@ -235,7 +295,7 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                                 width: '100%',
                                 fontSize: '.95rem',
                                 fontFamily: 'var(--fb)',
-                                color: 'var(--ch)',
+                                color: '#F5F5F4',
                             }}
                             placeholder="Search by name, expertise, or topic..."
                             value={search}
@@ -255,14 +315,15 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                                 style={{
                                     padding: '8px 20px',
                                     borderRadius: '24px',
-                                    background: isActive ? 'var(--gb)' : 'var(--cr)',
-                                    color: isActive ? '#fff' : 'var(--gm)',
-                                    fontFamily: 'var(--fu)',
+                                    background: isActive ? '#F59E0B' : '#1E293B',
+                                    color: isActive ? '#0F172A' : 'rgba(245,245,244,0.7)',
+                                    fontFamily: 'var(--fb)',
                                     fontSize: '.85rem',
                                     fontWeight: isActive ? 700 : 600,
-                                    border: 'none',
+                                    border: isActive ? 'none' : '1px solid rgba(245,245,244,0.1)',
                                     cursor: 'pointer',
-                                    transition: 'background 0.2s',
+                                    transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                                    boxShadow: isActive ? '0 4px 16px rgba(245,158,11,0.3)' : 'none',
                                 }}
                             >
                                 {cat}
@@ -281,7 +342,7 @@ export function ExpertsDirectory({ nav, onLogin, experts }) {
                         ))}
                     </div>
                 ) : (
-                    <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--mu)' }}>
+                    <div style={{ textAlign: 'center', padding: '60px 0', color: 'rgba(245,245,244,0.4)' }}>
                         <p>No experts found matching your criteria.</p>
                     </div>
                 )}

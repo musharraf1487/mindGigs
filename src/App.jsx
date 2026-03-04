@@ -193,7 +193,7 @@ export default function App() {
         <OnboardingPage
           nav={nav}
           notify={notify}
-          addExpert={(e) => setExperts((prev) => [e, ...prev])}
+          addExpert={(e) => setExperts((prev) => [...prev, e])}
         />
       )}
       {page === 'landingboard' && (

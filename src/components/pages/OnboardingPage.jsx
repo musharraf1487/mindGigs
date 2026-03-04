@@ -370,7 +370,8 @@ export function OnboardingPage({ nav, notify, addExpert }) {
 
                     const expertUpdates = {
                       image: photoUrl,
-                      category: 'Business', // Default or could be a field
+                      name: userData?.name || userData?.displayName || currentUser.displayName || 'Expert',
+                      category: 'Business',
                       tags: tags ? tags.split(',').map(t => t.trim()) : ['New Expert', 'Consulting'],
                       bio: bio || 'Newly onboarded expert profile on mindGigs.',
                       rating: 0,
@@ -383,11 +384,12 @@ export function OnboardingPage({ nav, notify, addExpert }) {
                       onboardingComplete: true
                     };
 
+                    const newExpertProfile = { ...userData, ...expertUpdates, id: currentUser.uid };
                     await updateDoc(doc(db, 'users', currentUser.uid), expertUpdates);
 
-                    if (addExpert) addExpert({ ...userData, ...expertUpdates, id: currentUser.uid });
+                    if (addExpert) addExpert(newExpertProfile);
                     notify('🎉 Profile live! Your page is ready.');
-                    nav('experts');
+                    nav('public-profile', { expertId: currentUser.uid });
                   } catch (err) {
                     console.error('Error saving profile:', err);
                     notify('Failed to save profile', 'error');
